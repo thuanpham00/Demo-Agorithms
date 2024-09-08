@@ -496,5 +496,5 @@ window.addEventListener("load", function () {
     return board;
   }
 
-  const randomSudokuBoard = createGridSudokuRandom();
+  createGridSudokuRandom();
 });
