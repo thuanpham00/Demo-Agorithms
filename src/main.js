@@ -120,11 +120,6 @@ const listSudoku = [
 // import { listSudoku } from "./examSudoku";
 
 window.addEventListener("load", function () {
-  // xử lý tạo bảng sudoku ngẫu nhiên
-  function createGridSudokuRandom() {
-    
-  }
-
   // khởi tạo 1 node (bảng)
   class Board {
     constructor(board, g, h) {
@@ -200,19 +195,11 @@ window.addEventListener("load", function () {
   }
 
   // xử lý random
-  let lastIndex = -1;
   const btnRandom = document.querySelector(".randomButton");
   btnRandom.addEventListener("click", handleRandom);
   function handleRandom() {
     handleClear();
-
-    let randomIndex;
-    do {
-      randomIndex = Math.floor(Math.random() * listSudoku.length);
-    } while (randomIndex === lastIndex);
-
-    lastIndex = randomIndex;
-    const board = listSudoku[randomIndex];
+    const board = createGridSudokuRandom();
     const rowBoard = document.querySelectorAll("tr");
     [...rowBoard].forEach((rowItem, rowIndex) => {
       const colBoard = rowItem.querySelectorAll("input"); // lấy các cột từ mỗi hàng truy vấn
@@ -433,26 +420,81 @@ window.addEventListener("load", function () {
 
   // xử lý trường hợp nếu 81 ô input đều rỗng giá trị sẽ ko chạy thuật toán
   // cần nhập ít nhất 17 ô (quy tắc)
-  function checkInputNull() {
-    const colInputs = document.querySelectorAll("input[type=text]");
+  // function checkInputNull() {
+  //   const colInputs = document.querySelectorAll("input[type=text]");
 
-    function updateButton() {
-      let count = 0;
-      [...colInputs].forEach((item) => {
-        if (item.value === "") {
-          count++;
-        }
-      });
-      if (count <= 81 && count >= 64) {
-        btnSolve.classList.add("block-btn");
-      } else if (count < 64) {
-        btnSolve.classList.remove("block-btn");
-      }
-    }
+  //   function updateButton() {
+  //     let count = 0;
+  //     [...colInputs].forEach((item) => {
+  //       if (item.value === "") {
+  //         count++;
+  //       }
+  //     });
+  //     if (count <= 81 && count >= 64) {
+  //       btnSolve.classList.add("block-btn");
+  //     } else if (count < 64) {
+  //       btnSolve.classList.remove("block-btn");
+  //     }
+  //   }
 
-    colInputs.forEach((item) => item.addEventListener("input", updateButton));
+  //   colInputs.forEach((item) => item.addEventListener("input", updateButton));
+  // }
+
+  // checkInputNull();
+  // window.addEventListener("load", checkInputNull);
+
+  // xử lý tạo bảng sudoku ngẫu nhiên
+  function initializeBoard() {
+    return Array.from({ length: 9 }, () => Array(9).fill(0));
   }
 
-  checkInputNull();
-  window.addEventListener("load", checkInputNull);
+  function createGridSudokuRandom() {
+    const newBoard = [];
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {}
+    }
+    return newBoard;
+  }
+
+  function solveSudoku(board) {
+    for (let row = 0; row < 9; row++) {
+      for (let col = 0; col < 9; col++) {
+        if (board[row][col] === 0) {
+          for (let num = 1; num <= 9; num++) {
+            if (isValidPlacement(board, row, col, num)) {
+              board[row][col] = num;
+              if (solveSudoku(board)) {
+                return true;
+              }
+              board[row][col] = 0;
+            }
+          }
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  function removeCells(board, numCellsToRemove) {
+    let cellsRemoved = 0;
+    while (cellsRemoved < numCellsToRemove) {
+      const row = Math.floor(Math.random() * 9);
+      const col = Math.floor(Math.random() * 9);
+      if (board[row][col] !== 0) {
+        board[row][col] = 0;
+        cellsRemoved++;
+      }
+    }
+  }
+
+  function createGridSudokuRandom() {
+    const valueInputBlank = document.getElementById("inputNodeBlank").value;
+    const board = initializeBoard();
+    solveSudoku(board); // Điền bảng với một giải pháp hợp lệ
+    removeCells(board, valueInputBlank); // Xóa số ô cụ thể
+    return board;
+  }
+
+  const randomSudokuBoard = createGridSudokuRandom();
 });
