@@ -6,6 +6,8 @@
   insertAdjacentHTML: Chèn chuỗi HTML vào một vị trí cụ thể trong DOM, phân tích cú pháp HTML trực tiếp.
  */
 
+// thay thế cho thư viện heap-js
+
 class MinHeap {
   constructor(compareFn) {
     this.heap = [];
@@ -92,17 +94,6 @@ class MinHeap {
 
 const listSudoku = [
   [
-    [5, 3, 4, 6, 7, 8, 9, 1, 0],
-    [6, 7, 2, 0, 9, 0, 3, 4, 8],
-    [1, 9, 8, 3, 4, 2, 0, 6, 7],
-    [8, 5, 9, 7, 0, 1, 4, 2, 3],
-    [4, 2, 6, 0, 5, 3, 7, 9, 1],
-    [7, 1, 3, 9, 2, 4, 8, 5, 6],
-    [9, 6, 0, 5, 3, 7, 2, 0, 4],
-    [2, 0, 7, 4, 1, 9, 6, 3, 5],
-    [3, 4, 5, 2, 0, 6, 1, 7, 9],
-  ],
-  [
     [5, 3, 0, 0, 7, 0, 0, 0, 0],
     [6, 0, 0, 1, 9, 5, 0, 0, 0],
     [0, 9, 8, 0, 0, 0, 0, 6, 0],
@@ -113,21 +104,38 @@ const listSudoku = [
     [0, 0, 0, 4, 1, 9, 0, 0, 5],
     [0, 0, 0, 0, 8, 0, 0, 7, 9],
   ],
+  [
+    [0, 0, 9, 0, 0, 0, 0, 3, 6],
+    [1, 7, 0, 0, 3, 0, 0, 0, 4],
+    [3, 6, 0, 0, 0, 4, 0, 5, 0],
+    [2, 0, 0, 1, 0, 0, 0, 8, 9],
+    [7, 9, 0, 6, 0, 8, 0, 1, 5],
+    [8, 5, 0, 0, 0, 9, 0, 0, 3],
+    [0, 8, 0, 3, 0, 0, 0, 9, 1],
+    [5, 0, 0, 0, 6, 0, 0, 7, 8],
+    [9, 1, 0, 0, 8, 0, 3, 0, 0],
+  ],
 ];
 
 // import { listSudoku } from "./examSudoku";
 
 window.addEventListener("load", function () {
+  // xử lý tạo bảng sudoku ngẫu nhiên
+  function createGridSudokuRandom() {
+    
+  }
+
+  // khởi tạo 1 node (bảng)
   class Board {
     constructor(board, g, h) {
       this.board = board;
       this.g = g;
       this.h = h;
       this.f = this.g + this.h;
-      this.parent = null;
     }
   }
 
+  // hàm tạo bảng UI (DOM ảo)
   const createGridBoard = () => {
     const grid = document.getElementById("sudoku");
     for (let i = 0; i < 9; i++) {
@@ -139,90 +147,104 @@ window.addEventListener("load", function () {
         input.maxLength = "1";
         input.readOnly = true;
         col.appendChild(input);
-        row.appendChild(col);
+        row.appendChild(col); // thêm cột vào mỗi hàng
       }
-      grid.appendChild(row);
+      grid.appendChild(row); // thêm hàng vào bảng
     }
   };
 
+  // hàm lấy bảng từ UI về
   const getBoardDisplay = () => {
     const board = [];
     const rowElements = document.querySelectorAll("#sudoku tr");
     rowElements.forEach((rowElement) => {
-      const inputElements = rowElement.querySelectorAll("input");
+      const inputElements = rowElement.querySelectorAll("input"); // truy cập trên mỗi hàng gọi các cột ra
       const row = [];
       inputElements.forEach((inputElement) => {
-        row.push(inputElement.value ? parseInt(inputElement.value) : 0);
+        const valueInput = inputElement.value ? parseInt(inputElement.value) : 0;
+        row.push(valueInput); // thêm mỗi giá trị vào hàng
       });
-      board.push(row);
+      board.push(row); // thêm hàng vào bảng
     });
     return board;
   };
 
+  // hàm này lấy số ô đã điền
   const calculateNodeFilled_G = (board) => {
     return board.flat().filter((cell) => cell !== 0).length;
   };
 
+  // hàm này lấy số ô chưa điền
   const calculateNodeNotFill_H = (board) => {
     return board.flat().filter((cell) => cell === 0).length;
   };
 
-  const createGridFromDisplay = (board) => {
-    const g = calculateNodeFilled_G(board);
-    const h = calculateNodeNotFill_H(board);
-    return new Board(board, g, h);
-  };
+  // hàm này tạo 1 đối tượng Board từ cái bảng hiện tại truyền vào
+  // tính toán các chi phí g và h
+  // const createGridFromDisplay = (board) => {
+  //   const g = calculateNodeFilled_G(board);
+  //   const h = calculateNodeNotFill_H(board);
+  //   console.table(board);
+  //   return new Board(board, g, h);
+  // };
 
+  // xử lý clear bảng
+  const btnClear = document.querySelector(".btn.btn-clear");
+  btnClear.addEventListener("click", handleClear);
+  function handleClear() {
+    const row = document.querySelectorAll("tr");
+    [...row].forEach((rowItem) => {
+      const inputItem = rowItem.querySelectorAll("input");
+      [...inputItem].forEach((colItem) => (colItem.value = ""));
+    });
+  }
+
+  // xử lý random
   let lastIndex = -1;
   const btnRandom = document.querySelector(".randomButton");
   btnRandom.addEventListener("click", handleRandom);
-
   function handleRandom() {
     handleClear();
+
     let randomIndex;
     do {
       randomIndex = Math.floor(Math.random() * listSudoku.length);
     } while (randomIndex === lastIndex);
 
     lastIndex = randomIndex;
-    const boardNew = listSudoku[randomIndex];
-    const rowElements = document.querySelectorAll("tr");
-    rowElements.forEach((rowElement, rowIndex) => {
-      const colElements = rowElement.querySelectorAll("input");
-      colElements.forEach((colElement, colIndex) => {
-        colElement.value = boardNew[rowIndex][colIndex] !== 0 ? boardNew[rowIndex][colIndex] : "";
+    const board = listSudoku[randomIndex];
+    const rowBoard = document.querySelectorAll("tr");
+    [...rowBoard].forEach((rowItem, rowIndex) => {
+      const colBoard = rowItem.querySelectorAll("input"); // lấy các cột từ mỗi hàng truy vấn
+
+      [...colBoard].forEach((colItem, colIndex) => {
+        colItem.value = board[rowIndex][colIndex] !== 0 ? board[rowIndex][colIndex] : "";
       });
     });
   }
 
-  const btnClear = document.querySelector(".btn.btn-clear");
-  btnClear.addEventListener("click", handleClear);
-
-  function handleClear() {
-    document.querySelectorAll("input").forEach((input) => (input.value = ""));
-  }
-
-  const btnSave = document.querySelector(".btn.btn-save");
-  btnSave.addEventListener("click", handleSave);
-
-  function handleSave() {
-    return createGridFromDisplay(getBoardDisplay());
-  }
-
   const checkBoxList = document.querySelectorAll(".inputCheckbox");
-  const colInputs = document.querySelectorAll("input[type=text]");
-
   const optionRandom = () => {
-    colInputs.forEach((colInput) => colInput.setAttribute("readOnly", "true"));
+    const colInputs = document.querySelectorAll("input[type=text]");
+    colInputs.forEach((colInput) => {
+      colInput.setAttribute("readOnly", "true");
+    });
+    inputBlank.removeAttribute("readOnly");
   };
-
   const optionTypeInput = () => {
+    const colInputs = document.querySelectorAll("input[type=text]");
+    const inputBlank = document.getElementById("inputNodeBlank");
     colInputs.forEach((colInput) => {
       colInput.removeAttribute("readOnly");
-      colInput.value = "";
     });
-  };
 
+    colInputs.forEach((colItem) =>
+      colItem.addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, ""); // thay thế các kí tự ngoài số = ""
+      })
+    );
+    inputBlank.setAttribute("readOnly", true);
+  };
   checkBoxList.forEach((item) =>
     item.addEventListener("change", () => {
       if (item.value === "user" && item.checked) {
@@ -236,14 +258,26 @@ window.addEventListener("load", function () {
   );
 
   const isValidPlacement = (board, row, col, num) => {
-    for (let j = 0; j < 9; j++) if (board[row][j] === num) return false;
-    for (let i = 0; i < 9; i++) if (board[i][col] === num) return false;
+    // nếu trên hàng này có cột nào đó trong mảng đã từng xuất hiện thì trả false -> số này không hợp lệ (num)
+    for (let j = 0; j < 9; j++) {
+      if (board[row][j] === num) {
+        return false;
+      }
+    }
+
+    for (let i = 0; i < 9; i++) {
+      if (board[i][col] === num) {
+        return false;
+      }
+    }
 
     const startRow = Math.floor(row / 3) * 3;
     const startCol = Math.floor(col / 3) * 3;
     for (let i = startRow; i < startRow + 3; i++) {
       for (let j = startCol; j < startCol + 3; j++) {
-        if (board[i][j] === num) return false;
+        if (board[i][j] === num) {
+          return false;
+        }
       }
     }
     return true;
@@ -253,73 +287,88 @@ window.addEventListener("load", function () {
     return calculateNodeFilled_G(board);
   };
 
+  // hàm này truyền vào 1 trạng thái bảng hiện tại -> trả về 1 giá trị xung đột của bảng hiện tại - h
   const heuristic = (board) => {
-    let emptyCells = calculateNodeNotFill_H(board);
     let conflictCount = 0;
 
-    for (let row = 0; row < 9; row++) {
-      const seen = new Set();
-      for (let col = 0; col < 9; col++) {
-        const num = board[row][col];
-        if (num !== 0) {
-          if (seen.has(num)) conflictCount++;
-          seen.add(num);
+    // Kiểm tra xung đột trong hàng và cột
+    for (let i = 0; i < 9; i++) {
+      // Set: lưu trữ trạng thái duy nhất của 1 giá trị. nếu có rồi ko add nữa
+      // dùng nó đếm xung đột
+      // xung đột càng thấp thì trạng thái bảng hiện tại gần gũi trạng thái hoàn chỉnh
+      // xung đột càng cao ngược lại
+      const rowSeen = new Set();
+      const colSeen = new Set();
+      for (let j = 0; j < 9; j++) {
+        // Kiểm tra xung đột hàng
+        if (board[i][j] !== 0) {
+          if (rowSeen.has(board[i][j])) conflictCount++; // nếu có rồi thì đếm
+          rowSeen.add(board[i][j]);
+        }
+        // Kiểm tra xung đột cột
+        if (board[j][i] !== 0) {
+          if (colSeen.has(board[j][i])) conflictCount++;
+          colSeen.add(board[j][i]);
         }
       }
     }
 
-    for (let col = 0; col < 9; col++) {
-      const seen = new Set();
-      for (let row = 0; row < 9; row++) {
-        const num = board[row][col];
-        if (num !== 0) {
-          if (seen.has(num)) conflictCount++;
-          seen.add(num);
-        }
-      }
-    }
-
+    // Kiểm tra xung đột trong các khối 3x3
     for (let blockRow = 0; blockRow < 9; blockRow += 3) {
       for (let blockCol = 0; blockCol < 9; blockCol += 3) {
-        const seen = new Set();
-        for (let row = blockRow; row < blockRow + 3; row++) {
-          for (let col = blockCol; col < blockCol + 3; col++) {
-            const num = board[row][col];
+        const blockSeen = new Set();
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 3; j++) {
+            const num = board[blockRow + i][blockCol + j];
             if (num !== 0) {
-              if (seen.has(num)) conflictCount++;
-              seen.add(num);
+              if (blockSeen.has(num)) conflictCount++;
+              blockSeen.add(num);
             }
           }
         }
       }
     }
 
-    return emptyCells + 2 * conflictCount;
+    // Trọng số heuristic bao gồm số xung đột
+    return conflictCount;
   };
 
+  // hàm này truyền vào 1 trạng thái bảng hiện tại -> trả về các trạng thái tiếp theo từ bảng hiện tại
   const generateNextStates = (currentState) => {
     const nextStates = [];
     const { board } = currentState;
-    const emptyCells = [];
+    let minChoices = 10; // Số lượng lựa chọn tối thiểu cho một ô
+    let minCell = null;
 
-    for (let i = 0; i < 9; i++) {
-      for (let j = 0; j < 9; j++) {
-        if (board[i][j] === 0) emptyCells.push({ row: i, col: j });
+    // Tìm ô trống có ít lựa chọn nhất
+    for (let row = 0; row < 9; row++) {
+      for (let col = 0; col < 9; col++) {
+        if (board[row][col] === 0) {
+          const validNumbers = [];
+          for (let num = 1; num <= 9; num++) {
+            if (isValidPlacement(board, row, col, num)) {
+              validNumbers.push(num);
+            }
+          }
+          if (validNumbers.length < minChoices) {
+            minChoices = validNumbers.length;
+            minCell = { row, col, validNumbers };
+          }
+        }
       }
     }
 
-    emptyCells.forEach(({ row, col }) => {
-      for (let num = 1; num <= 9; num++) {
-        if (isValidPlacement(board, row, col, num)) {
-          const newBoard = board.map((row) => row.slice());
-          newBoard[row][col] = num;
-          const g = costFunction(newBoard);
-          const h = heuristic(newBoard);
-          const newState = new Board(newBoard, g, h);
-          nextStates.push(newState);
-        }
-      }
-    });
+    // Nếu tìm được ô trống có ít lựa chọn nhất, sinh các trạng thái từ ô này
+    // ví dụ có 2 số tm trong validNumbers thì lưu 2 trạng thái kế tiếp vào
+    if (minCell) {
+      minCell.validNumbers.forEach((num) => {
+        const newBoard = board.map((r) => r.slice()); // tạo bản sao cho board
+        newBoard[minCell.row][minCell.col] = num;
+        const g = costFunction(newBoard);
+        const h = heuristic(newBoard);
+        nextStates.push(new Board(newBoard, g, h));
+      });
+    }
 
     return nextStates;
   };
@@ -334,41 +383,45 @@ window.addEventListener("load", function () {
     });
   };
 
+  const boardToString = (board) => {
+    return board.map((row) => row.join(",")).join(";");
+  };
+
   const aStarSearch = (startBoard) => {
     const openList = new MinHeap((a, b) => a.f - b.f);
     const closeList = new Set();
 
-    const startState = new Board(
-      startBoard,
-      calculateNodeFilled_G(startBoard),
-      calculateNodeNotFill_H(startBoard)
-    );
+    const startState = new Board(startBoard, calculateNodeFilled_G(startBoard), heuristic(startBoard));
 
     openList.push(startState);
 
     while (openList.length > 0) {
-      const currentState = openList.pop();
+      const currentState = openList.pop(); // lấy ra thằng f nhỏ nhất
       const { board } = currentState;
 
+      // Kiểm tra nếu tất cả các ô đã được điền
       if (calculateNodeNotFill_H(board) === 0) {
         updateBoardOnUI(board);
         return;
       }
 
+      const boardString = boardToString(board);
+      if (closeList.has(boardString)) {
+        continue;
+      }
+      closeList.add(boardString);
+
       const nextStates = generateNextStates(currentState);
 
       nextStates.forEach((state) => {
-        const boardString = JSON.stringify(state.board);
-        if (!closeList.has(boardString)) {
-          closeList.add(boardString);
-          openList.push(state);
-        }
+        openList.push(state);
       });
     }
 
     alert("Không tìm thấy lời giải");
   };
 
+  // run thuật toán
   const btnSolve = document.querySelector(".btn.btn-run");
   btnSolve.addEventListener("click", () => {
     const startBoard = getBoardDisplay();
@@ -377,20 +430,29 @@ window.addEventListener("load", function () {
   });
 
   createGridBoard();
+
+  // xử lý trường hợp nếu 81 ô input đều rỗng giá trị sẽ ko chạy thuật toán
+  // cần nhập ít nhất 17 ô (quy tắc)
+  function checkInputNull() {
+    const colInputs = document.querySelectorAll("input[type=text]");
+
+    function updateButton() {
+      let count = 0;
+      [...colInputs].forEach((item) => {
+        if (item.value === "") {
+          count++;
+        }
+      });
+      if (count <= 81 && count >= 64) {
+        btnSolve.classList.add("block-btn");
+      } else if (count < 64) {
+        btnSolve.classList.remove("block-btn");
+      }
+    }
+
+    colInputs.forEach((item) => item.addEventListener("input", updateButton));
+  }
+
+  checkInputNull();
+  window.addEventListener("load", checkInputNull);
 });
-
-/**
- * là các giá trị thoa mãn điều kiện (trạng thái mới , cập nhật bảng) sau đó lưu vào nextStates, chạy thuật toán A* nó lấy thằng nhỏ nhất (f) đúng ko
- */
-
-// [
-//   [1, 0, 0, 0, 0, 7, 0, 9, 0],
-//   [0, 0, 3, 0, 0, 2, 0, 0, 8],
-//   [0, 0, 9, 6, 0, 0, 5, 0, 0],
-//   [0, 0, 5, 3, 0, 0, 9, 0, 0],
-//   [0, 0, 1, 0, 0, 8, 0, 0, 0],
-//   [2, 6, 0, 0, 0, 4, 0, 0, 0],
-//   [3, 0, 0, 0, 0, 0, 0, 1, 0],
-//   [0, 0, 4, 0, 0, 0, 0, 0, 0],
-//   [0, 7, 0, 0, 7, 0, 0, 0, 3],
-// ],
