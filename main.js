@@ -418,31 +418,6 @@ window.addEventListener("load", function () {
 
   createGridBoard();
 
-  // xử lý trường hợp nếu 81 ô input đều rỗng giá trị sẽ ko chạy thuật toán
-  // cần nhập ít nhất 17 ô (quy tắc)
-  // function checkInputNull() {
-  //   const colInputs = document.querySelectorAll("input[type=text]");
-
-  //   function updateButton() {
-  //     let count = 0;
-  //     [...colInputs].forEach((item) => {
-  //       if (item.value === "") {
-  //         count++;
-  //       }
-  //     });
-  //     if (count <= 81 && count >= 64) {
-  //       btnSolve.classList.add("block-btn");
-  //     } else if (count < 64) {
-  //       btnSolve.classList.remove("block-btn");
-  //     }
-  //   }
-
-  //   colInputs.forEach((item) => item.addEventListener("input", updateButton));
-  // }
-
-  // checkInputNull();
-  // window.addEventListener("load", checkInputNull);
-
   // xử lý tạo bảng sudoku ngẫu nhiên
   function initializeBoard() {
     return Array.from({ length: 9 }, () => Array(9).fill(0));
