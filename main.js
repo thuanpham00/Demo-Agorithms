@@ -104,6 +104,9 @@ window.addEventListener("load", function () {
   [...inputList].forEach((inputItem) =>
     inputItem.addEventListener("input", function (e) {
       this.value = this.value.replace(/\D/g, "");
+      if(this.value === "0") {
+        this.value = ""
+      }
     })
   );
 
