@@ -48,6 +48,9 @@ window.addEventListener("load", function () {
     return board;
   };
 
+  // tạo bảng UI
+  createGridBoard();
+
   // hàm này lấy số ô đã điền
   const calculateNodeFilled_G = (board) => {
     return board.flat().filter((cell) => cell !== 0).length;
@@ -96,6 +99,13 @@ window.addEventListener("load", function () {
       });
     });
   }
+
+  const inputList = document.querySelectorAll("#sudoku tr td input");
+  [...inputList].forEach((inputItem) =>
+    inputItem.addEventListener("input", function (e) {
+      this.value = this.value.replace(/\D/g, "");
+    })
+  );
 
   // xử lý chỉ được nhập số và tối thiểu 1 <= value <= 55
   const changeValueInput = document.querySelector("#inputNodeBlank");
@@ -376,7 +386,4 @@ window.addEventListener("load", function () {
   };
   const btnSolve = document.querySelector(".btn.btn-run");
   btnSolve.addEventListener("click", validateAndSolve);
-
-  // tạo bảng UI
-  createGridBoard();
 });
