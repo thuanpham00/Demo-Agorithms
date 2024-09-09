@@ -86,7 +86,7 @@ function removeCells(board, numHoles) {
       cells.push([i, j]);
     }
   }
-  cells.sort(() => Math.random() - 0.5);
+  cells.sort(() => Math.random() - 0.5); // xáo trộn mảng
 
   let holes = 0;
   for (const [row, col] of cells) {
@@ -95,7 +95,7 @@ function removeCells(board, numHoles) {
     }
     const backup = board[row][col];
     board[row][col] = 0;
-
+    // kiểm tra việc xóa ô có dẫn đến nhiều cách giải ko. nếu nhiều khôi phục giá trị cũ
     if (countSolutions(board) !== 1) {
       board[row][col] = backup;
     } else {
@@ -105,9 +105,9 @@ function removeCells(board, numHoles) {
 }
 
 function generateSudoku(numHoles = 40) {
-  const board = Array.from({ length: N }, () => Array(N).fill(0));
-  fillSudoku(board);
-  removeCells(board, numHoles);
+  const board = Array.from({ length: N }, () => Array(N).fill(0)); // mang 2 chiều
+  fillSudoku(board); // điền bảng
+  removeCells(board, numHoles); // xóa cột
   return board;
 }
 
@@ -125,4 +125,4 @@ function createGridSudokuRandom() {
   return board;
 }
 
-export default createGridSudokuRandom
+export default createGridSudokuRandom;

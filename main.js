@@ -104,8 +104,8 @@ window.addEventListener("load", function () {
   [...inputList].forEach((inputItem) =>
     inputItem.addEventListener("input", function () {
       this.value = this.value.replace(/\D/g, "");
-      if(this.value === "0") {
-        this.value = ""
+      if (this.value === "0") {
+        this.value = "";
       }
     })
   );
@@ -247,6 +247,10 @@ window.addEventListener("load", function () {
         const g = costFunction(newBoard);
         const h = heuristic(newBoard);
         nextStates.push(new Board(newBoard, g, h));
+        // sau khi tìm được ô có ít lựa chọn nhất
+        // ví dụ ô 1 có 3 lựa chọn, ô 2 có 5 lựa chọn -> chọn ô 1
+        // trong ô 1 có 3 lựa chọn lần lượt thêm chúng vào mảng
+        // tính g và h
       });
     }
 
@@ -268,13 +272,14 @@ window.addEventListener("load", function () {
     });
   };
 
+  // biến mảng 2D thành 1 chuỗi str
   const boardToString = (board) => {
     return board.map((row) => row.join(",")).join(";");
   };
 
   const aStarSearch = (startBoard) => {
     const openList = new MinHeap((a, b) => a.f - b.f);
-    const closeList = new Set();
+    const closeList = new Set(); // đối tượng lưu trữ trạng thái duy nhất của 1 giá trị
 
     const startState = new Board(startBoard, calculateNodeFilled_G(startBoard), heuristic(startBoard));
 
@@ -296,7 +301,7 @@ window.addEventListener("load", function () {
       }
       closeList.add(boardString);
 
-      const nextStates = generateNextStates(currentState);
+      const nextStates = generateNextStates(currentState); // truyền bảng trạng thái hiện tại -> tìm các trạng thái tiếp theo của bảng hiện tại
 
       nextStates.forEach((state) => {
         openList.push(state);
@@ -387,6 +392,7 @@ window.addEventListener("load", function () {
       }
     }
   };
+
   const btnSolve = document.querySelector(".btn.btn-run");
   btnSolve.addEventListener("click", validateAndSolve);
 });

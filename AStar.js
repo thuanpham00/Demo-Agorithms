@@ -93,7 +93,7 @@ const runAStar = (matrix, src, dest) => {
 
   const closeList = Array.from(
     { length: row },
-    () => Array.from({ length: col }, () => false) // mỗi phần tử là 1 Node
+    () => Array.from({ length: col }, () => false) // mỗi phần tử dc đánh dấu là boolean
   );
 
   const customPriorityComparator = (a, b) => a.f - b.f;
