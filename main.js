@@ -102,7 +102,7 @@ window.addEventListener("load", function () {
 
   const inputList = document.querySelectorAll("#sudoku tr td input");
   [...inputList].forEach((inputItem) =>
-    inputItem.addEventListener("input", function (e) {
+    inputItem.addEventListener("input", function () {
       this.value = this.value.replace(/\D/g, "");
       if(this.value === "0") {
         this.value = ""
