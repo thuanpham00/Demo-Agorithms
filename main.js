@@ -97,28 +97,59 @@ window.addEventListener("load", function () {
     });
   }
 
-  const checkBoxList = document.querySelectorAll(".inputCheckbox");
-  const optionTypeInput = () => {
-    const colInputs = document.querySelectorAll("input[type=text]");
-    const inputBlank = document.getElementById("inputNodeBlank");
+  // xử lý input ô trống
+  // xử lý chỉ được nhập số và tối thiểu 1 <= value <= 9
+  const inputElements = document.querySelectorAll('input[type="text"]');
+  [...inputElements].forEach((itemInput) =>
+    itemInput.addEventListener("keydown", function (e) {
+      if (
+        e.key === "Backspace" ||
+        e.key === "Delete" ||
+        e.key === "ArrowLeft" ||
+        e.key === "ArrowRight" ||
+        e.key === "Tab" ||
+        e.key === "Enter"
+      ) {
+        return; // Cho phép các phím chức năng
+      }
 
-    colInputs.forEach((colItem) =>
-      colItem.addEventListener("input", function () {
-        this.value = this.value.replace(/\D/g, ""); // thay thế các kí tự ngoài số = ""
-      })
-    );
-    inputBlank.setAttribute("readOnly", true);
-  };
-  checkBoxList.forEach((item) =>
-    item.addEventListener("change", () => {
-      if (item.value === "user" && item.checked) {
-        btnRandom.classList.add("block-btn");
-        optionTypeInput();
-      } else if (item.value === "random" && item.checked) {
-        btnRandom.classList.remove("block-btn");
+      if (!/\d/.test(e.key)) {
+        e.preventDefault(); // Ngăn việc nhập ký tự không phải số
       }
     })
   );
+  [...inputElements].forEach((itemInput) =>
+    itemInput.addEventListener("input", function (e) {
+      itemInput.value = itemInput.value.replace(/\D/g, "")
+    })
+  );
+
+  // xử lý chỉ được nhập số và tối thiểu 1 <= value <= 55
+  const changeValueInput = document.querySelector("#inputNodeBlank");
+  changeValueInput.addEventListener("keydown", function (e) {
+    // Cho phép các phím điều hướng và phím chức năng
+    if (
+      e.key === "Backspace" ||
+      e.key === "Delete" ||
+      e.key === "ArrowLeft" ||
+      e.key === "ArrowRight" ||
+      e.key === "Tab" ||
+      e.key === "Enter"
+    ) {
+      return; // Cho phép các phím chức năng
+    }
+
+    // Ngăn việc nhập ký tự nếu không phải là số
+    if (!/\d/.test(e.key)) {
+      e.preventDefault(); // Ngăn việc nhập ký tự không phải số
+    }
+  });
+  changeValueInput.addEventListener("input", function (e) {
+    if (parseInt(e.target.value) < 1 || parseInt(e.target.value) > 55) {
+      alert("Số ô trống tối thiểu 1 ô và tối đa 55 ô");
+      changeValueInput.value = "";
+    }
+  });
 
   const isValidPlacement = (board, row, col, num) => {
     // nếu trên hàng này có cột nào đó trong mảng đã từng xuất hiện thì trả false -> số này không hợp lệ (num)
