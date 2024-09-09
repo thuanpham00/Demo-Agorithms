@@ -97,21 +97,6 @@ window.addEventListener("load", function () {
     });
   }
 
-  // xử lý input ô trống
-  // xử lý chỉ được nhập số và tối thiểu 1 <= value <= 9
-  const inputElements = document.querySelectorAll('#sudoku input[type="text"]');
-  console.log(inputElements);
-  // inputElements.forEach((item) => {
-  //   item.addEventListener("input", function () {
-  //     // Chỉ giữ lại các ký tự số, loại bỏ các ký tự khác
-  //     this.value = this.value.replace(/\D/g, "");
-  //   });
-  // });
-  const checkValueValid = () => {
-    const row = document.querySelectorAll("tr");
-    [...row].forEach((item) => console.log(item));
-  };
-  checkValueValid();
   // xử lý chỉ được nhập số và tối thiểu 1 <= value <= 55
   const changeValueInput = document.querySelector("#inputNodeBlank");
   changeValueInput.addEventListener("keydown", function (e) {
