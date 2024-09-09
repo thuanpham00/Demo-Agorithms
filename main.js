@@ -1,123 +1,7 @@
-/**
- *append: Chèn nhiều node hoặc chuỗi văn bản, không thay thế nội dung hiện có.
-
-  appendChild: Chỉ chèn node (phần tử DOM), không chấp nhận chuỗi, chèn cuối nội dung.
-  
-  insertAdjacentHTML: Chèn chuỗi HTML vào một vị trí cụ thể trong DOM, phân tích cú pháp HTML trực tiếp.
- */
-
 // thay thế cho thư viện heap-js
 
-class MinHeap {
-  constructor(compareFn) {
-    this.heap = [];
-    this.compare = compareFn || ((a, b) => a - b);
-  }
-
-  // Trả về số phần tử trong heap
-  get length() {
-    return this.heap.length;
-  }
-
-  // Thêm một phần tử vào heap
-  push(value) {
-    this.heap.push(value);
-    this._bubbleUp(this.heap.length - 1);
-  }
-
-  // Lấy phần tử nhỏ nhất và loại bỏ nó khỏi heap
-  pop() {
-    if (this.length === 0) return null;
-
-    const root = this.heap[0];
-    const end = this.heap.pop();
-    if (this.length > 0) {
-      this.heap[0] = end;
-      this._sinkDown(0);
-    }
-    return root;
-  }
-
-  // Xem phần tử nhỏ nhất mà không loại bỏ
-  peek() {
-    return this.heap[0] || null;
-  }
-
-  // Đẩy phần tử lên vị trí chính xác trong heap
-  _bubbleUp(index) {
-    const element = this.heap[index];
-    while (index > 0) {
-      const parentIndex = Math.floor((index - 1) / 2);
-      const parent = this.heap[parentIndex];
-      if (this.compare(element, parent) >= 0) break;
-
-      this.heap[index] = parent;
-      index = parentIndex;
-    }
-    this.heap[index] = element;
-  }
-
-  // Đẩy phần tử xuống vị trí chính xác trong heap
-  _sinkDown(index) {
-    const length = this.heap.length;
-    const element = this.heap[index];
-    while (true) {
-      const leftChildIndex = 2 * index + 1;
-      const rightChildIndex = 2 * index + 2;
-      let swap = null;
-
-      if (leftChildIndex < length) {
-        const leftChild = this.heap[leftChildIndex];
-        if (this.compare(leftChild, element) < 0) {
-          swap = leftChildIndex;
-        }
-      }
-
-      if (rightChildIndex < length) {
-        const rightChild = this.heap[rightChildIndex];
-        if (
-          (swap === null && this.compare(rightChild, element) < 0) ||
-          (swap !== null && this.compare(rightChild, this.heap[swap]) < 0)
-        ) {
-          swap = rightChildIndex;
-        }
-      }
-
-      if (swap === null) break;
-
-      this.heap[index] = this.heap[swap];
-      index = swap;
-    }
-    this.heap[index] = element;
-  }
-}
-
-const listSudoku = [
-  [
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [6, 0, 0, 1, 9, 5, 0, 0, 0],
-    [0, 9, 8, 0, 0, 0, 0, 6, 0],
-    [8, 0, 0, 0, 6, 0, 0, 0, 3],
-    [4, 0, 0, 8, 0, 3, 0, 0, 1],
-    [7, 0, 0, 0, 2, 0, 0, 0, 6],
-    [0, 6, 0, 0, 0, 0, 2, 8, 0],
-    [0, 0, 0, 4, 1, 9, 0, 0, 5],
-    [0, 0, 0, 0, 8, 0, 0, 7, 9],
-  ],
-  [
-    [0, 0, 9, 0, 0, 0, 0, 3, 6],
-    [1, 7, 0, 0, 3, 0, 0, 0, 4],
-    [3, 6, 0, 0, 0, 4, 0, 5, 0],
-    [2, 0, 0, 1, 0, 0, 0, 8, 9],
-    [7, 9, 0, 6, 0, 8, 0, 1, 5],
-    [8, 5, 0, 0, 0, 9, 0, 0, 3],
-    [0, 8, 0, 3, 0, 0, 0, 9, 1],
-    [5, 0, 0, 0, 6, 0, 0, 7, 8],
-    [9, 1, 0, 0, 8, 0, 3, 0, 0],
-  ],
-];
-
-// import { listSudoku } from "./examSudoku";
+import createGridSudokuRandom from "./GenerateSudoku.js";
+import MinHeap from "./heap.js";
 
 window.addEventListener("load", function () {
   // khởi tạo 1 node (bảng)
@@ -140,7 +24,7 @@ window.addEventListener("load", function () {
         const input = document.createElement("input");
         input.type = "text";
         input.maxLength = "1";
-        input.readOnly = true;
+        input.style.backgroundColor = "white";
         col.appendChild(input);
         row.appendChild(col); // thêm cột vào mỗi hàng
       }
@@ -190,7 +74,10 @@ window.addEventListener("load", function () {
     const row = document.querySelectorAll("tr");
     [...row].forEach((rowItem) => {
       const inputItem = rowItem.querySelectorAll("input");
-      [...inputItem].forEach((colItem) => (colItem.value = ""));
+      [...inputItem].forEach((colItem) => {
+        colItem.value = "";
+        colItem.style.backgroundColor = "white";
+      });
     });
   }
 
@@ -211,19 +98,9 @@ window.addEventListener("load", function () {
   }
 
   const checkBoxList = document.querySelectorAll(".inputCheckbox");
-  const optionRandom = () => {
-    const colInputs = document.querySelectorAll("input[type=text]");
-    colInputs.forEach((colInput) => {
-      colInput.setAttribute("readOnly", "true");
-    });
-    inputBlank.removeAttribute("readOnly");
-  };
   const optionTypeInput = () => {
     const colInputs = document.querySelectorAll("input[type=text]");
     const inputBlank = document.getElementById("inputNodeBlank");
-    colInputs.forEach((colInput) => {
-      colInput.removeAttribute("readOnly");
-    });
 
     colInputs.forEach((colItem) =>
       colItem.addEventListener("input", function () {
@@ -239,7 +116,6 @@ window.addEventListener("load", function () {
         optionTypeInput();
       } else if (item.value === "random" && item.checked) {
         btnRandom.classList.remove("block-btn");
-        optionRandom();
       }
     })
   );
@@ -365,7 +241,12 @@ window.addEventListener("load", function () {
     rowElements.forEach((rowElement, rowIndex) => {
       const colElements = rowElement.querySelectorAll("input");
       colElements.forEach((colElement, colIndex) => {
-        colElement.value = board[rowIndex][colIndex] !== 0 ? board[rowIndex][colIndex] : "";
+        if (colElement.value === "") {
+          colElement.value = board[rowIndex][colIndex];
+          colElement.style.backgroundColor = "orange";
+        } else if (colElement.value !== 0) {
+          colElement.style.backgroundColor = "white";
+        }
       });
     });
   };
@@ -408,68 +289,93 @@ window.addEventListener("load", function () {
     alert("Không tìm thấy lời giải");
   };
 
-  // run thuật toán
-  const btnSolve = document.querySelector(".btn.btn-run");
-  btnSolve.addEventListener("click", () => {
-    const startBoard = getBoardDisplay();
-    console.table(startBoard);
-    aStarSearch(startBoard);
-  });
-
-  createGridBoard();
-
-  // xử lý tạo bảng sudoku ngẫu nhiên
-  function initializeBoard() {
-    return Array.from({ length: 9 }, () => Array(9).fill(0));
-  }
-
-  function createGridSudokuRandom() {
-    const newBoard = [];
-    for (let i = 0; i < 9; i++) {
-      for (let j = 0; j < 9; j++) {}
-    }
-    return newBoard;
-  }
-
-  function solveSudoku(board) {
+  // check bảng trước khi run
+  // kiểm tra bảng hợp lệ
+  const isValidSudoku = (board) => {
+    // Kiểm tra hàng
     for (let row = 0; row < 9; row++) {
+      const rowSet = new Set();
       for (let col = 0; col < 9; col++) {
-        if (board[row][col] === 0) {
-          for (let num = 1; num <= 9; num++) {
-            if (isValidPlacement(board, row, col, num)) {
-              board[row][col] = num;
-              if (solveSudoku(board)) {
-                return true;
-              }
-              board[row][col] = 0;
-            }
+        const num = board[row][col];
+        if (num !== 0) {
+          if (rowSet.has(num)) {
+            return false; // Trùng lặp số trong cùng hàng
           }
-          return false;
+          rowSet.add(num);
         }
       }
     }
-    return true;
-  }
 
-  function removeCells(board, numCellsToRemove) {
-    let cellsRemoved = 0;
-    while (cellsRemoved < numCellsToRemove) {
-      const row = Math.floor(Math.random() * 9);
-      const col = Math.floor(Math.random() * 9);
-      if (board[row][col] !== 0) {
-        board[row][col] = 0;
-        cellsRemoved++;
+    // Kiểm tra cột
+    for (let col = 0; col < 9; col++) {
+      const colSet = new Set();
+      for (let row = 0; row < 9; row++) {
+        const num = board[row][col];
+        if (num !== 0) {
+          if (colSet.has(num)) {
+            return false; // Trùng lặp số trong cùng cột
+          }
+          colSet.add(num);
+        }
       }
     }
-  }
 
-  function createGridSudokuRandom() {
-    const valueInputBlank = document.getElementById("inputNodeBlank").value;
-    const board = initializeBoard();
-    solveSudoku(board); // Điền bảng với một giải pháp hợp lệ
-    removeCells(board, valueInputBlank); // Xóa số ô cụ thể
-    return board;
-  }
+    // Kiểm tra khối 3x3
+    for (let blockRow = 0; blockRow < 9; blockRow += 3) {
+      for (let blockCol = 0; blockCol < 9; blockCol += 3) {
+        const blockSet = new Set();
+        for (let row = blockRow; row < blockRow + 3; row++) {
+          for (let col = blockCol; col < blockCol + 3; col++) {
+            const num = board[row][col];
+            if (num !== 0) {
+              if (blockSet.has(num)) {
+                return false; // Trùng lặp số trong cùng khối 3x3
+              }
+              blockSet.add(num);
+            }
+          }
+        }
+      }
+    }
 
+    return true; // Nếu không có xung đột
+  };
+
+  // đếm số lượng ô = 0 (trống)
+  const countEmptyCells = (board) => {
+    let count = 0;
+    board.forEach((row) => {
+      row.forEach((cell) => {
+        if (cell === 0) {
+          // 0 đại diện cho ô trống
+          count++;
+        }
+      });
+    });
+    return count;
+  };
+
+  // run thuật toán
+  const validateAndSolve = () => {
+    const startBoard = getBoardDisplay();
+    const emptyCell = countEmptyCells(startBoard);
+    if (emptyCell < 1 || emptyCell > 55) {
+      alert("Số lượng ô trống phải lớn hoặc bằng 1 và nhỏ hơn hoặc bằng 55.");
+    } else {
+      if (isValidSudoku(startBoard)) {
+        console.table(startBoard);
+        aStarSearch(startBoard);
+      } else {
+        alert("Bảng Sudoku không hợp lệ. Vui lòng kiểm tra lại bảng.");
+      }
+    }
+  };
+  const btnSolve = document.querySelector(".btn.btn-run");
+  btnSolve.addEventListener("click", validateAndSolve);
+
+  // tạo bảng UI
+  createGridBoard();
+
+  // xử lý tạo bảng ngẫu nhiên
   createGridSudokuRandom();
 });

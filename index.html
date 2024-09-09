@@ -47,22 +47,18 @@
         padding: 0 16px;
       }
 
-      .main-wrapper {
-        margin-top: 50px;
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 16px;
-      }
-
       .content-right {
+        margin-top: 50px;
         text-align: center;
-        width: 50%;
+        width: 100%;
       }
 
       .content-left {
-        width: 50%;
-        text-align: center;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
       }
 
       .randomButton,
@@ -92,11 +88,16 @@
       }
 
       .menu {
+        margin-top: 50px;
         font-size: 24px;
       }
 
+      .menu-inner {
+        width: 300px;
+      }
+
       .select-menu {
-        margin-top: 50px;
+        margin-top: 30px;
         display: flex;
         justify-content: flex-start;
         align-items: flex-start;
@@ -154,10 +155,10 @@
 
   <body>
     <div class="main">
-      <h1>Ứng dụng thuật toán A* giải nhanh Sudoku</h1>
-      <div class="main-wrapper">
-        <div class="content-left">
-          <h2 class="menu">Menu</h2>
+      <h1>Ứng dụng thuật toán A* giải Sudoku</h1>
+      <div class="content-left">
+        <h2 class="menu">Menu</h2>
+        <div class="menu-inner">
           <div class="select-menu">
             <div class="flex">
               <input type="radio" id="random" name="option" class="inputCheckbox" value="random" checked />
@@ -165,7 +166,7 @@
             </div>
             <div class="flex" style="width: 300px">
               <label for="inputNodeBlank">Số lượng ô trống</label>
-              <input type="text" style="width: 40px; height: 40px" id="inputNodeBlank" />
+              <input type="text" style="width: 40px; height: 40px" id="inputNodeBlank" value="40" />
               <button class="randomButton">Random</button>
             </div>
           </div>
@@ -176,18 +177,19 @@
             </div>
           </div>
         </div>
-        <div class="content-right">
-          <h2>Sudoku</h2>
-          <table id="sudoku"></table>
-          <div class="random-wrapper">
-            <button class="btn btn-clear">Xóa</button>
-            <button class="btn btn-run">Chạy thuật toán</button>
-          </div>
-          <p class="rule">Lưu ý: Nếu user tự nhập số liệu: vui lòng nhập ít nhất 17 ô</p>
+      </div>
+      <div class="content-right">
+        <h2>Sudoku</h2>
+        <table id="sudoku"></table>
+        <div class="random-wrapper">
+          <button class="btn btn-clear">Xóa</button>
+          <button class="btn btn-run">Chạy thuật toán</button>
         </div>
+        <p class="rule">Lưu ý: Nếu user tự nhập số liệu: vui lòng nhập ít nhất 17 ô</p>
       </div>
     </div>
 
-    <script src="./main.js" type="module"></script>
+    <script type="module" src="./heap.js"></script>
+    <script type="module" src="./main.js"></script>
   </body>
 </html>
