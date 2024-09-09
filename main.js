@@ -113,14 +113,14 @@ window.addEventListener("load", function () {
         return; // Cho phép các phím chức năng
       }
 
-      if (!/\d/.test(e.key)) {
-        e.preventDefault(); // Ngăn việc nhập ký tự không phải số
+      if (!/[\d\b]/.test(e.key)) {
+        e.preventDefault();
       }
     })
   );
   [...inputElements].forEach((itemInput) =>
     itemInput.addEventListener("input", function (e) {
-      itemInput.value = itemInput.value.replace(/\D/g, "")
+      itemInput.value = itemInput.value.replace(/\D/g, "");
     })
   );
 
