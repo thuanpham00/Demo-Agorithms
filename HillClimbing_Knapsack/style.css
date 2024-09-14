@@ -109,3 +109,7 @@ input {
 .hidden {
   display: none;
 }
+
+.visible {
+  display: flex;
+}

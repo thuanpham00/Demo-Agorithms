@@ -169,7 +169,12 @@ window.addEventListener("load", function () {
     const tableResult = document.querySelector(".resultTable");
     const tableRemaining = document.querySelector(".remainingTable");
     const resultTitle = document.querySelectorAll(".titleResult");
+    const descTable = document.querySelectorAll(".descTable");
     [...resultTitle].forEach((item) => item.classList.remove("hidden"));
+    [...descTable].forEach((item) => {
+      item.classList.remove("hidden");
+      item.classList.add("visible");
+    });
 
     listRes.forEach((item) => {
       const itemElement = document.createElement("div");
