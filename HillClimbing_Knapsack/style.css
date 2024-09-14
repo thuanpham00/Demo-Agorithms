@@ -1,0 +1,111 @@
+body {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  background-color: #fff;
+}
+h1 {
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+h2 {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+input {
+  border: 1px solid gray; /* Viền mỏng cho các ô input */
+  width: 200px;
+  height: 100%;
+  font-size: 15px;
+  box-sizing: border-box; /* Đảm bảo kích thước input không bị thay đổi */
+  outline: none;
+  padding: 4px;
+}
+
+.main {
+  margin-top: 50px;
+  width: 100%;
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 16px;
+}
+
+.main-wrapper {
+  margin-top: 50px;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.content-left,
+.content-right {
+  flex: 1;
+}
+
+.img {
+  width: 80%;
+  height: 400px;
+}
+
+.form {
+  margin-top: 30px;
+  width: 100%;
+}
+
+.itemInput {
+  margin-bottom: 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-addBalo {
+  margin-top: 10px;
+  font-size: 14px;
+  border-radius: 99px;
+  padding: 8px 12px;
+  outline: none;
+  border: none;
+  background-color: #00a6fb;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.btn-removeBalo {
+  background-color: #bf4342;
+}
+
+.btn-addBalo:hover {
+  opacity: 0.8;
+}
+
+.itemObj {
+  text-align: center;
+  width: calc(100% / 3);
+  border: 1px solid #000;
+  border-top: none;
+  padding: 8px;
+}
+
+.itemObj2 {
+  border: 1px solid #000;
+  text-align: center;
+  width: calc(100% / 3);
+  border: 1px solid #000;
+  padding: 8px;
+}
+
+.item {
+  display: flex;
+}
+
+.hidden {
+  display: none;
+}

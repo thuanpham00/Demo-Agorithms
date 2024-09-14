@@ -11,6 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "js-heap": "^0.3.1"
+    "heap-js": "^2.5.0",
+    "js-heap": "^0.3.1",
+    "matplotlib": "^1.0.0",
+    "numpy": "^0.0.1"
   }
 }
