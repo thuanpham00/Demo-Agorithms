@@ -4,19 +4,33 @@ window.addEventListener("load", function () {
   const inputWeight = document.getElementById("weightObject");
   const inputValue = document.getElementById("valueObject");
   const inputDataBalo = document.getElementById("valueDataBalo");
-  inputWeight.addEventListener("input", TypeNumberInput);
-  inputValue.addEventListener("input", TypeNumberInput);
+  inputWeight.addEventListener("input", function () {
+    if ((this.value.match(/\./g) || []).length > 1) {
+      this.value = this.value.replace(/\.$/, "");
+    }
+  });
+  // inputValue.addEventListener("input", TypeNumberInput);
+  // function TypeNumberInput() {
+  //   this.value = this.value.replace(/[^0-9.]/g, ""); // gán những kí tự khác số = ""
+  //   // Đảm bảo chỉ có một dấu chấm thập phân
+  //   if ((this.value.match(/\./g) || []).length > 1) {
+  //     this.value = this.value.replace(/\.$/, "");
+  //   }
+  // }
 
-  function TypeNumberInput() {
-    this.value = this.value.replace(/\D/g, ""); // gán những kí tự khác số = ""
+  function CheckDot(valueNumber) {
+    return valueNumber.replace(/\./g, "");
   }
 
   let listObj = [];
-  let baloWeight = 0;
+  let baloWeight = 0.0;
   inputDataBalo.addEventListener("input", function () {
-    this.value = this.value.replace(/\D/g, "");
+    this.value = this.value.replace(/[^0-9.]/g, "");
     if (this.value !== "") {
-      baloWeight = parseInt(this.value);
+      baloWeight = parseFloat(this.value);
+    }
+    if ((this.value.match(/\./g) || []).length > 1) {
+      this.value = this.value.replace(/\.$/, "");
     }
   });
 
@@ -39,8 +53,14 @@ window.addEventListener("load", function () {
     inputName.value = "";
   }
 
-  btnSave.addEventListener("click", handleSaveItem);
+  // xử lý xóa cả bảng
+  const btnClearTable = document.getElementById("btnDeleteTable");
+  btnClearTable.addEventListener("click", function () {
+    listObj.splice(0, listObj.length);
+    listItem.innerHTML = "";
+  });
 
+  btnSave.addEventListener("click", handleSaveItem);
   function handleSaveItem() {
     const item = new Object(inputName.value, inputWeight.value, inputValue.value);
     listObj.push(item);
@@ -51,6 +71,13 @@ window.addEventListener("load", function () {
   }
 
   function addItemToList(item) {
+    const btnDeleteWrapper = document.createElement("div");
+    const btnDelete = document.createElement("button");
+    btnDelete.textContent = "-";
+    btnDelete.classList.add("btnDeleteItem");
+    btnDeleteWrapper.appendChild(btnDelete);
+    btnDeleteWrapper.classList.add("itemObj3");
+
     const itemElement = document.createElement("div");
     const itemElementName = document.createElement("div");
     const itemElementWeight = document.createElement("div");
@@ -65,7 +92,14 @@ window.addEventListener("load", function () {
     itemElement.appendChild(itemElementName);
     itemElement.appendChild(itemElementWeight);
     itemElement.appendChild(itemElementValue);
+    itemElement.appendChild(btnDeleteWrapper);
     listItem.appendChild(itemElement);
+
+    btnDelete.addEventListener("click", function () {
+      console.log("xóa");
+      itemElement.remove();
+      listObj.filter((arr) => arr !== item);
+    });
   }
 
   function hillClimbing(list, maxWeight) {
@@ -76,12 +110,12 @@ window.addEventListener("load", function () {
 
     // sắp xếp chọn đồ vật có tỉ lệ giá trị / trọng lượng lớn nhất bỏ vào
     // tạo 1 giải pháp trước
-    list.sort((a, b) => b.value / b.weight - a.value / a.weight);
+    list.sort((a, b) => CheckDot(b.value) / b.weight - CheckDot(a.value) / a.weight);
 
     list.forEach((item) => {
       if (currentWeight + parseFloat(item.weight) <= parseFloat(maxWeight)) {
         currentList.push(item);
-        currentValue = currentValue + parseFloat(item.value);
+        currentValue = currentValue + parseFloat(CheckDot(item.value));
         currentWeight = currentWeight + parseFloat(item.weight);
       } else {
         remainingList.push(item); // lưu các đồ vật còn lại
@@ -95,15 +129,15 @@ window.addEventListener("load", function () {
       for (let i = 0; i < currentList.length; i++) {
         let currentItem = currentList[i];
         let currentWeightNew = currentWeight - parseFloat(currentItem.weight);
-        let currentValueNew = currentValue - parseFloat(currentItem.value);
+        let currentValueNew = currentValue - parseFloat(CheckDot(currentItem.value));
         for (let j = 0; j < remainingList.length; j++) {
           let newItem = remainingList[j];
           if (
             parseFloat(newItem.weight) + currentWeightNew <= parseFloat(maxWeight) &&
-            currentValue < currentValueNew + parseFloat(newItem.value)
+            currentValue < currentValueNew + parseFloat(CheckDot(newItem.value))
           ) {
             currentList[i] = newItem;
-            currentValue = currentValueNew + parseFloat(newItem.value);
+            currentValue = currentValueNew + parseFloat(CheckDot(newItem.value));
             currentWeight = currentWeightNew + parseFloat(newItem.weight);
 
             remainingList.splice(j, 1); // xóa phần tử ra khỏi ds còn lại
@@ -121,9 +155,9 @@ window.addEventListener("load", function () {
     }
 
     // trả về danh sách tối ưu
-    console.log(currentValue);
-    console.log("danh sách duoc chon: ", currentList);
-    console.log("danh sach còn lại", remainingList);
+    // console.log(currentValue);
+    // console.log("danh sách duoc chon: ", currentList);
+    // console.log("danh sach còn lại", remainingList);
     return { currentList, remainingList };
   }
 
@@ -131,7 +165,6 @@ window.addEventListener("load", function () {
   btnRun.addEventListener("click", function () {
     const result = hillClimbing(listObj, baloWeight).currentList;
     const resultRemaining = hillClimbing(listObj, baloWeight).remainingList;
-    resultTable(result, resultRemaining);
     if (listObj.length === 0) {
       alert("Danh sách đồ vật hiện đang rỗng!");
     }
@@ -139,35 +172,25 @@ window.addEventListener("load", function () {
     if (baloWeight === 0) {
       alert("Trọng lượng balo đang rỗng");
     }
-    console.log("các đồ vật tối ưu được chọn: ", result);
-  });
 
-  function createTableUIVirtual() {
-    if (listObj.length === 0) {
-      const itemElement = document.createElement("div");
-      const itemElementName = document.createElement("div");
-      const itemElementWeight = document.createElement("div");
-      const itemElementValue = document.createElement("div");
-      itemElement.classList.add("item");
-      itemElementName.classList.add("itemObj");
-      itemElementWeight.classList.add("itemObj");
-      itemElementValue.classList.add("itemObj");
-      itemElementName.textContent = "...";
-      itemElementWeight.textContent = "...";
-      itemElementValue.textContent = "...";
-      itemElement.appendChild(itemElementName);
-      itemElement.appendChild(itemElementWeight);
-      itemElement.appendChild(itemElementValue);
-      listItem.appendChild(itemElement);
-    } else {
+    if (baloWeight !== 0 && listObj.length !== 0) {
+      resultTable(result, resultRemaining);
     }
-  }
-
-  // createTableUIVirtual();
+  });
 
   function resultTable(listRes, listRemaining) {
     const tableResult = document.querySelector(".resultTable");
     const tableRemaining = document.querySelector(".remainingTable");
+    btnClearTable.addEventListener("click", function (e) {
+      tableResult.innerHTML = "";
+      tableRemaining.innerHTML = "";
+      [...descTable].forEach((item) => {
+        item.classList.add("hidden");
+        item.classList.remove("visible");
+      });
+      [...resultTitle].forEach((item) => item.classList.add("hidden"));
+    });
+
     const resultTitle = document.querySelectorAll(".titleResult");
     const descTable = document.querySelectorAll(".descTable");
     [...resultTitle].forEach((item) => item.classList.remove("hidden"));
