@@ -97,12 +97,17 @@ window.addEventListener("load", function () {
     itemElementWeight.textContent = item.weight;
     itemElementValue.textContent = item.value;
     itemElementId.textContent = item.id;
-    itemElement.appendChild(itemElementId);
-    itemElement.appendChild(itemElementName);
-    itemElement.appendChild(itemElementWeight);
-    itemElement.appendChild(itemElementValue);
-    itemElement.appendChild(btnDeleteWrapper);
-    listItem.appendChild(itemElement);
+
+    if (item.name === "" || item.weight === "" || item.value === "") {
+      alert("Vui lòng nhập đầy đủ thông tin!");
+    } else {
+      itemElement.appendChild(itemElementId);
+      itemElement.appendChild(itemElementName);
+      itemElement.appendChild(itemElementWeight);
+      itemElement.appendChild(itemElementValue);
+      itemElement.appendChild(btnDeleteWrapper);
+      listItem.appendChild(itemElement);
+    }
 
     btnDelete.addEventListener("click", function () {
       itemElement.remove();
@@ -196,6 +201,7 @@ window.addEventListener("load", function () {
     const tableRemaining = document.querySelector(".remainingTable");
     tableResult.innerHTML = "";
     tableRemaining.innerHTML = "";
+
     btnClearTable.addEventListener("click", function () {
       tableResult.innerHTML = "";
       tableRemaining.innerHTML = "";
