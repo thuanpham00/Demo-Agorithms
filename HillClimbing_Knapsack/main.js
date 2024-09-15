@@ -24,6 +24,7 @@ window.addEventListener("load", function () {
 
   let listObj = [];
   let baloWeight = 0.0;
+  let index = 0;
   inputDataBalo.addEventListener("input", function () {
     this.value = this.value.replace(/[^0-9.]/g, "");
     if (this.value !== "") {
@@ -36,7 +37,8 @@ window.addEventListener("load", function () {
 
   const listItem = document.querySelector(".listItemBalo");
   class Object {
-    constructor(name, weight, value) {
+    constructor(id, name, weight, value) {
+      this.id = id;
       this.name = name;
       this.weight = weight;
       this.value = value;
@@ -58,15 +60,17 @@ window.addEventListener("load", function () {
   btnClearTable.addEventListener("click", function () {
     listObj.splice(0, listObj.length);
     listItem.innerHTML = "";
+    index = 0;
   });
 
   btnSave.addEventListener("click", handleSaveItem);
   function handleSaveItem() {
-    const item = new Object(inputName.value, inputWeight.value, inputValue.value);
+    const item = new Object(index + 1, inputName.value, inputWeight.value, inputValue.value);
     listObj.push(item);
     console.log(listObj);
     clearValue();
     addItemToList(item);
+    index++;
     return listObj;
   }
 
@@ -79,6 +83,7 @@ window.addEventListener("load", function () {
     btnDeleteWrapper.classList.add("itemObj3");
 
     const itemElement = document.createElement("div");
+    const itemElementId = document.createElement("div");
     const itemElementName = document.createElement("div");
     const itemElementWeight = document.createElement("div");
     const itemElementValue = document.createElement("div");
@@ -86,9 +91,13 @@ window.addEventListener("load", function () {
     itemElementName.classList.add("itemObj");
     itemElementWeight.classList.add("itemObj");
     itemElementValue.classList.add("itemObj");
+    itemElementId.classList.add("itemObj3");
+    itemElementId.classList.add("check");
     itemElementName.textContent = item.name;
     itemElementWeight.textContent = item.weight;
     itemElementValue.textContent = item.value;
+    itemElementId.textContent = item.id;
+    itemElement.appendChild(itemElementId);
     itemElement.appendChild(itemElementName);
     itemElement.appendChild(itemElementWeight);
     itemElement.appendChild(itemElementValue);
@@ -96,9 +105,13 @@ window.addEventListener("load", function () {
     listItem.appendChild(itemElement);
 
     btnDelete.addEventListener("click", function () {
-      console.log("xóa");
       itemElement.remove();
-      listObj.filter((arr) => arr !== item);
+      const findItem = listObj.findIndex((arr) => arr.id === item.id);
+      if (findItem !== -1) {
+        listObj.splice(findItem, 1);
+      }
+      // In mảng sau khi đã cập nhật
+      console.log("Cập nhật listObj: ", listObj);
     });
   }
 
@@ -181,7 +194,9 @@ window.addEventListener("load", function () {
   function resultTable(listRes, listRemaining) {
     const tableResult = document.querySelector(".resultTable");
     const tableRemaining = document.querySelector(".remainingTable");
-    btnClearTable.addEventListener("click", function (e) {
+    tableResult.innerHTML = "";
+    tableRemaining.innerHTML = "";
+    btnClearTable.addEventListener("click", function () {
       tableResult.innerHTML = "";
       tableRemaining.innerHTML = "";
       [...descTable].forEach((item) => {
@@ -201,16 +216,20 @@ window.addEventListener("load", function () {
 
     listRes.forEach((item) => {
       const itemElement = document.createElement("div");
+      const itemElementId = document.createElement("div");
       const itemElementName = document.createElement("div");
       const itemElementWeight = document.createElement("div");
       const itemElementValue = document.createElement("div");
       itemElement.classList.add("item");
+      itemElementId.classList.add("itemObj2");
       itemElementName.classList.add("itemObj2");
       itemElementWeight.classList.add("itemObj2");
       itemElementValue.classList.add("itemObj2");
+      itemElementId.textContent = item.id;
       itemElementName.textContent = item.name;
       itemElementWeight.textContent = item.weight;
       itemElementValue.textContent = item.value;
+      itemElement.appendChild(itemElementId);
       itemElement.appendChild(itemElementName);
       itemElement.appendChild(itemElementWeight);
       itemElement.appendChild(itemElementValue);
@@ -219,16 +238,20 @@ window.addEventListener("load", function () {
 
     listRemaining.forEach((item) => {
       const itemElement = document.createElement("div");
+      const itemElementId = document.createElement("div");
       const itemElementName = document.createElement("div");
       const itemElementWeight = document.createElement("div");
       const itemElementValue = document.createElement("div");
       itemElement.classList.add("item");
+      itemElementId.classList.add("itemObj2");
       itemElementName.classList.add("itemObj2");
       itemElementWeight.classList.add("itemObj2");
       itemElementValue.classList.add("itemObj2");
+      itemElementId.textContent = item.id;
       itemElementName.textContent = item.name;
       itemElementWeight.textContent = item.weight;
       itemElementValue.textContent = item.value;
+      itemElement.appendChild(itemElementId);
       itemElement.appendChild(itemElementName);
       itemElement.appendChild(itemElementWeight);
       itemElement.appendChild(itemElementValue);

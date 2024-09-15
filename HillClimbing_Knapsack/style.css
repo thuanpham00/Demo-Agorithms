@@ -29,7 +29,7 @@ input {
 .main {
   margin: 20px;
   width: 100%;
-  max-width: 1040px;
+  max-width: 1140px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -91,7 +91,15 @@ input {
 
 .itemObj {
   text-align: center;
-  width: calc(100% / 4);
+  width: 25%;
+  border: 1px solid #000;
+  border-top: none;
+  padding: 8px;
+}
+
+.itemObj3 {
+  text-align: center;
+  width: 12.5%;
   border: 1px solid #000;
   border-top: none;
   padding: 8px;
@@ -100,7 +108,7 @@ input {
 .itemObj2 {
   border: 1px solid #000;
   text-align: center;
-  width: calc(100% / 3);
+  width: calc(100% / 4);
   border-top: none;
   padding: 8px;
 }
@@ -126,14 +134,6 @@ input {
   border-radius: 999px;
   color: #fff;
   transition: all 0.3s ease;
-}
-
-.itemObj3 {
-  text-align: center;
-  width: calc(100% / 4);
-  border: 1px solid #000;
-  border-top: none;
-  padding: 2px 8px;
 }
 
 .btnDeleteItem:hover {
