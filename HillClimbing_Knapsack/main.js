@@ -4,20 +4,15 @@ window.addEventListener("load", function () {
   const inputWeight = document.getElementById("weightObject");
   const inputValue = document.getElementById("valueObject");
   const inputDataBalo = document.getElementById("valueDataBalo");
+
+  // xử lý chỉ nhập được 1 kí tự "."
   inputWeight.addEventListener("input", function () {
     if ((this.value.match(/\./g) || []).length > 1) {
       this.value = this.value.replace(/\.$/, "");
     }
   });
-  // inputValue.addEventListener("input", TypeNumberInput);
-  // function TypeNumberInput() {
-  //   this.value = this.value.replace(/[^0-9.]/g, ""); // gán những kí tự khác số = ""
-  //   // Đảm bảo chỉ có một dấu chấm thập phân
-  //   if ((this.value.match(/\./g) || []).length > 1) {
-  //     this.value = this.value.replace(/\.$/, "");
-  //   }
-  // }
 
+  // xử lý thay kí tự "." thành ""
   function CheckDot(valueNumber) {
     return valueNumber.replace(/\./g, "");
   }
@@ -25,6 +20,8 @@ window.addEventListener("load", function () {
   let listObj = [];
   let baloWeight = 0.0;
   let index = 0;
+
+  // xử lý ràng buộc trọng lượng balo
   inputDataBalo.addEventListener("input", function () {
     this.value = this.value.replace(/[^0-9.]/g, "");
     if (this.value !== "") {
@@ -45,9 +42,8 @@ window.addEventListener("load", function () {
     }
   }
 
-  // xử lý xóa obj
+  // xử lý xóa 1 item
   const btnDelete = document.getElementById("btnDelete");
-  const btnSave = document.getElementById("btnSave");
   btnDelete.addEventListener("click", clearValue);
   function clearValue() {
     inputValue.value = "";
@@ -63,6 +59,8 @@ window.addEventListener("load", function () {
     index = 0;
   });
 
+  // xử lý lưu item vào mảng
+  const btnSave = document.getElementById("btnSave");
   btnSave.addEventListener("click", handleSaveItem);
   function handleSaveItem() {
     const item = new Object(index + 1, inputName.value, inputWeight.value, inputValue.value);
@@ -110,13 +108,13 @@ window.addEventListener("load", function () {
     }
 
     btnDelete.addEventListener("click", function () {
+      // xóa item trên UI
       itemElement.remove();
       const findItem = listObj.findIndex((arr) => arr.id === item.id);
       if (findItem !== -1) {
+        // xóa item trong list
         listObj.splice(findItem, 1);
       }
-      // In mảng sau khi đã cập nhật
-      console.log("Cập nhật listObj: ", listObj);
     });
   }
 

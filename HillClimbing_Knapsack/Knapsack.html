@@ -40,9 +40,28 @@
             <label for="valueDataBalo">Trọng lượng balo:</label>
             <input type="text" id="valueDataBalo" style="width: 50px" />
           </div>
+          <div class="data-balo" style="margin-top: 20px; position: relative">
+            <label for="valueDataBalo">Danh sách đồ vật có sẵn:</label>
+            <input type="text" id="renderList" style="width: 120px" autocomplete="off" readonly/>
+            <div
+              style="
+                flex-direction: column;
+                width: 100px;
+                gap: 2px;
+                position: absolute;
+                left: 182px;
+                top: 32px;
+              "
+              class="hidden"
+              id="listUI"
+            >
+              <button id="list-1">Danh sách 1</button>
+              <button id="list-2">Danh sách 2</button>
+            </div>
+          </div>
 
           <div>
-            <h2 style="margin-top: 20px">Danh sách đồ vật</h2>
+            <h2 style="margin-top: 50px">Danh sách đồ vật</h2>
             <div style="display: flex; margin-top: 20px">
               <div style="width: 12.5%; text-align: center; border: 1px solid #000; padding: 8px">ID</div>
               <div style="width: 25%; text-align: center; border: 1px solid #000; padding: 8px">
