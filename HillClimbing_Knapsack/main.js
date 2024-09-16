@@ -63,7 +63,16 @@ window.addEventListener("load", function () {
   const btnSave = document.getElementById("btnSave");
   btnSave.addEventListener("click", handleSaveItem);
   function handleSaveItem() {
-    const item = new Object(index + 1, inputName.value, inputWeight.value, inputValue.value);
+    const itemName = inputName.value.trim();
+    const itemWeight = inputWeight.value.trim();
+    const itemValue = inputValue.value.trim();
+
+    if (itemName === "" || itemWeight === "" || itemValue === "") {
+      alert("Vui lòng nhập đầy đủ thông tin trước khi lưu");
+      return;
+    }
+
+    const item = new Object(index + 1, itemName, itemWeight, itemValue);
     listObj.push(item);
     console.log(listObj);
     clearValue();
@@ -96,16 +105,12 @@ window.addEventListener("load", function () {
     itemElementValue.textContent = item.value;
     itemElementId.textContent = item.id;
 
-    if (item.name === "" || item.weight === "" || item.value === "") {
-      alert("Vui lòng nhập đầy đủ thông tin!");
-    } else {
-      itemElement.appendChild(itemElementId);
-      itemElement.appendChild(itemElementName);
-      itemElement.appendChild(itemElementWeight);
-      itemElement.appendChild(itemElementValue);
-      itemElement.appendChild(btnDeleteWrapper);
-      listItem.appendChild(itemElement);
-    }
+    itemElement.appendChild(itemElementId);
+    itemElement.appendChild(itemElementName);
+    itemElement.appendChild(itemElementWeight);
+    itemElement.appendChild(itemElementValue);
+    itemElement.appendChild(btnDeleteWrapper);
+    listItem.appendChild(itemElement);
 
     btnDelete.addEventListener("click", function () {
       // xóa item trên UI
