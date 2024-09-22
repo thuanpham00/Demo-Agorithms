@@ -202,17 +202,15 @@ window.addEventListener("load", function () {
     if (costNew >= costOld) {
       return 1;
     }
-    return Math.exp(-(costNew - costOld) / temperature); // chấp nhận nghiệm kém hơn
-    // vẫn chấp nhận nghiệm xấu // tính xác suất chấp nhận // loại bỏ mắc kẹt cục bộ ở đây
+    return Math.exp(-(costNew - costOld) / temperature); // chấp nhận nghiệm kém hơn // tính xác suất chấp nhận // có thể loại bỏ mắc kẹt cục bộ ở đây
   }
 
   // cải thiện = thuật toán
   function simulatedAnnealing(listInput, maxWeight) {
+    // khởi tạo giải pháp ban đầu
     const { currentList, remainingList } = createListInitial(listInput, maxWeight);
     let currentList_1 = currentList.slice();
     let remainingList_1 = remainingList.slice();
-    console.log(currentList_1);
-    console.log(remainingList_1);
 
     let costOld = Cost(currentList_1);
     let T = 1.0;
@@ -249,6 +247,7 @@ window.addEventListener("load", function () {
         noImprovementCount = 0;
       }
       T = T * A_pha;
+      // Khi nhiệt độ (T) rất nhỏ, thuật toán gần như chỉ chấp nhận nghiệm hàng xóm nếu nó tốt hơn nghiệm hiện tại. Điều này giúp thuật toán dần ổn định và hội tụ vào một nghiệm tốt nhất có thể.
     }
 
     // xử lý list còn lại
