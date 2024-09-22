@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Knapsack</title>
+    <link rel="stylesheet" href="../reset.css" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="main">
+      <h1>Ứng dụng thuật toán Simualated Annealing vào Knapsack Problem</h1>
+      <div class="main-wrapper">
+        <div class="content-left">
+          <img src="./balo.png" alt="balo" class="img" />
+        </div>
+        <div class="content-right">
+          <h2>Nhập danh sách đồ vật</h2>
+          <div class="form">
+            <div class="itemInput">
+              <label for="nameObject">Tên đồ vật:</label>
+              <input type="text" id="nameObject" />
+            </div>
+            <div class="itemInput">
+              <label for="weightObject">Trọng lượng đồ vật (đơn vi: Kg):</label>
+              <input type="text" id="weightObject" />
+            </div>
+            <div class="itemInput">
+              <label for="valueObject">Giá trị đồ vật:</label>
+              <input type="text" id="valueObject" />
+            </div>
+
+            <div style="width: 100%; text-align: right">
+              <button class="btn-addBalo btn-removeBalo" id="btnDelete">Clear</button>
+              <button class="btn-addBalo" id="btnSave">Thêm vào danh sách đồ vật</button>
+            </div>
+          </div>
+
+          <div class="data-balo" style="margin-top: 20px">
+            <label for="valueDataBalo">Trọng lượng balo:</label>
+            <input type="text" id="valueDataBalo" style="width: 50px" />
+          </div>
+
+          <div>
+            <h2 style="margin-top: 10px">Danh sách đồ vật</h2>
+            <div style="display: flex; margin-top: 20px">
+              <div style="width: 12.5%; text-align: center; border: 1px solid #000; padding: 8px">ID</div>
+              <div style="width: 25%; text-align: center; border: 1px solid #000; padding: 8px">
+                Tên đồ vật
+              </div>
+              <div style="width: 25%; text-align: center; border: 1px solid #000; padding: 8px">
+                Trọng lượng (Kg)
+              </div>
+              <div style="width: 25%; text-align: center; border: 1px solid #000; padding: 8px">Giá trị</div>
+              <div style="width: 12.5%; text-align: center; border: 1px solid #000; padding: 8px"></div>
+            </div>
+            <div class="listItemBalo"></div>
+          </div>
+
+          <div style="width: 100%; text-align: right">
+            <button class="btn-addBalo btn-removeBalo" id="btnDeleteTable">Xóa bảng</button>
+            <button class="btn-addBalo" id="runHillClimbing" style="margin-top: 20px">Chạy thuật toán</button>
+          </div>
+
+          <div>
+            <h2 class="hidden titleResult" style="margin-top: 20px">Kết quả</h2>
+            <div style="display: flex; margin-top: 20px; gap: 8px">
+              <div style="width: 50%">
+                <h3 class="hidden titleResult" style="text-align: center">Hiện đang trong balo</h3>
+                <div class="hidden descTable" style="margin-top: 20px">
+                  <div
+                    style="width: calc(100% / 4); text-align: center; border: 1px solid #000; padding: 8px"
+                  >
+                    ID
+                  </div>
+                  <div
+                    style="width: calc(100% / 4); text-align: center; border: 1px solid #000; padding: 8px"
+                  >
+                    Tên đồ vật
+                  </div>
+                  <div
+                    style="width: calc(100% / 4); text-align: center; border: 1px solid #000; padding: 8px"
+                  >
+                    Trọng lượng
+                  </div>
+                  <div
+                    style="width: calc(100% / 4); text-align: center; border: 1px solid #000; padding: 8px"
+                  >
+                    Giá trị
+                  </div>
+                </div>
+                <div class="resultTable" style="width: 100%"></div>
+              </div>
+              <div style="width: 50%">
+                <h3 class="hidden titleResult" style="text-align: center">Đồ vật còn lại</h3>
+                <div class="hidden descTable" style="margin-top: 20px">
+                  <div
+                    style="width: calc(100% / 4); text-align: center; border: 1px solid #000; padding: 8px"
+                  >
+                    ID
+                  </div>
+                  <div
+                    style="width: calc(100% / 4); text-align: center; border: 1px solid #000; padding: 8px"
+                  >
+                    Tên đồ vật
+                  </div>
+                  <div
+                    style="width: calc(100% / 4); text-align: center; border: 1px solid #000; padding: 8px"
+                  >
+                    Trọng lượng
+                  </div>
+                  <div
+                    style="width: calc(100% / 4); text-align: center; border: 1px solid #000; padding: 8px"
+                  >
+                    Giá trị
+                  </div>
+                </div>
+                <div class="remainingTable" style="width: 100%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
