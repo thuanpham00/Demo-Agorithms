@@ -217,7 +217,7 @@ window.addEventListener("load", function () {
     let costOld = Cost(currentList_1);
     let T = 1.0;
     let T_min = 0.00001;
-    let A_pha = 0.99;
+    let A_pha = 0.95;
     let maxNoImprovement = 200; // Giới hạn số lần không cải thiện
     let noImprovementCount = 0; // Đếm số lần không cải thiện
     let improved = true;
@@ -225,7 +225,7 @@ window.addEventListener("load", function () {
     while (T > T_min && noImprovementCount < maxNoImprovement) {
       improved = false;
       let i = 0;
-      while (i < 1000) {
+      while (i < 5000) {
         let { currentList: newList, remainingList: newRemainingList } = neighbor(
           currentList_1,
           remainingList_1,
