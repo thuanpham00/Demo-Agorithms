@@ -140,6 +140,34 @@ window.addEventListener("load", function () {
     return Math.exp(-(costOld - costNew) / temperature); // Chấp nhận nghiệm kém hơn tùy vào nhiệt độ
   }
 
+  function dynamicProgrammingKnapsack(items, maxWeight) {
+    const dp = Array.from({ length: items.length + 1 }, () => Array(maxWeight + 1).fill(0));
+
+    for (let i = 1; i <= items.length; i++) {
+      for (let w = 0; w <= maxWeight; w++) {
+        if (items[i - 1].weight <= w) {
+          dp[i][w] = Math.max(
+            dp[i - 1][w],
+            dp[i - 1][w - items[i - 1].weight] + parseFloat(CheckDot(items[i - 1].value))
+          );
+        } else {
+          dp[i][w] = dp[i - 1][w];
+        }
+      }
+    }
+
+    const result = [];
+    let w = maxWeight;
+    for (let i = items.length; i > 0 && w > 0; i--) {
+      if (dp[i][w] !== dp[i - 1][w]) {
+        result.push(items[i - 1]);
+        w -= items[i - 1].weight;
+      }
+    }
+
+    return { maxCost: dp[items.length][maxWeight], items: result };
+  }
+
   // giải pháp ban đầu
   function createListInitial(listInput, maxWeight) {
     // Sắp xếp đồ vật theo tỷ lệ value/weight
@@ -209,16 +237,18 @@ window.addEventListener("load", function () {
 
   // cải thiện = thuật toán
   function simulatedAnnealing(listInput, maxWeight) {
+    // Sử dụng lập trình động để tìm giải pháp ban đầu
+    const { items: initialItems } = dynamicProgrammingKnapsack(listInput, maxWeight);
     const { currentList, remainingList } = createListInitial(listInput, maxWeight);
-    let currentList_1 = [...currentList]; // currentList.slice();
-    let remainingList_1 = [...remainingList]; // remainingList.slice();
+    let currentList_1 = [...initialItems];
+    let remainingList_1 = [...remainingList];
 
     let costOld = Cost(currentList_1);
     let T = 1.0;
     let T_min = 0.00001;
     let A_pha = 0.95;
-    let maxNoImprovement = 500; // Giới hạn số lần không cải thiện
-    let noImprovementCount = 0; // Đếm số lần không cải thiện
+    let maxNoImprovement = 500;
+    let noImprovementCount = 0;
     let improved = true;
 
     while (T > T_min && noImprovementCount < maxNoImprovement) {
@@ -250,10 +280,9 @@ window.addEventListener("load", function () {
       T = T * A_pha; // Giảm nhiệt độ dần
     }
 
-    // lọc ra những phần tử còn lại mà currentList ko chứa
     remainingList_1 = listInput.filter((item) => !currentList_1.includes(item));
 
-    return { currentList_1, remainingList_1 };
+    return { currentList_1, remainingList_1, maxValue: Cost(currentList_1) };
   }
 
   const btnRun = document.getElementById("runHillClimbing");
