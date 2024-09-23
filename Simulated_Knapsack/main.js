@@ -165,7 +165,7 @@ window.addEventListener("load", function () {
       }
     }
 
-    return { maxCost: dp[items.length][maxWeight], items: result };
+    return { items: result };
   }
 
   // giải pháp ban đầu
@@ -279,8 +279,6 @@ window.addEventListener("load", function () {
     if (inputDataBalo.value === "") {
       alert("Trọng lượng balo đang rỗng");
     }
-
-    console.log(inputDataBalo.value);
 
     if (baloWeight !== 0 && listObj.length !== 0) {
       resultTable(currentList_1, remainingList_1);
