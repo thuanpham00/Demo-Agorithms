@@ -190,50 +190,75 @@ window.addEventListener("load", function () {
     return { currentList, remainingList };
   }
 
-  // Hàm hỗ trợ để lấy các tổ hợp từ một mảng
-  function getCombinations(array, size) {
-    const result = [];
-    const combine = (start, combo) => {
-      if (combo.length === size) {
-        result.push(combo);
-        return;
-      }
-      for (let i = start; i < array.length; i++) {
-        combine(i + 1, combo.concat(array[i]));
-      }
-    };
-    combine(0, []);
-    return result;
-  }
-
   function neighbor(currentList, remainingList, maxWeight) {
     let bestList = [...currentList];
     let bestCost = Cost(currentList);
 
-    // Thử mọi khả năng loại bỏ từ 1 đến n món đồ
-    for (let i = 1; i <= currentList.length; i++) {
-      const combinations = getCombinations(currentList, i);
-      // loại bỏ 1 đến n đồ vật và thay thế 1 đồ vật từ remaining vào
-      combinations.forEach((combination) => {
-        let newList = currentList.filter((item) => !combination.includes(item)); // Loại bỏ món đồ
-        let newWeight = newList.reduce((sum, item) => sum + parseFloat(item.weight), 0);
+    // Chỉ loại bỏ một món đồ và thêm một món đồ từ remaining
+    for (let i = 0; i < currentList.length; i++) {
+      let itemToRemove = currentList[i];
+      let newList = currentList.filter((_, index) => index !== i);
+      let newWeight = newList.reduce((sum, item) => sum + parseFloat(item.weight), 0);
 
-        // Thử thêm từng món đồ từ remainingList vào newList
-        remainingList.forEach((itemAdd) => {
-          if (newWeight + parseFloat(itemAdd.weight) <= maxWeight) {
-            let newListFromRemain = [...newList, itemAdd];
-            let newCostFromRemain = Cost(newListFromRemain);
-            if (newCostFromRemain > bestCost) {
-              bestList = newListFromRemain;
-              bestCost = newCostFromRemain;
-            }
+      remainingList.forEach((itemAdd) => {
+        if (newWeight + parseFloat(itemAdd.weight) <= maxWeight) {
+          let newListFromRemain = [...newList, itemAdd];
+          let newCostFromRemain = Cost(newListFromRemain);
+          if (newCostFromRemain > bestCost) {
+            bestList = newListFromRemain;
+            bestCost = newCostFromRemain;
           }
-        });
+        }
       });
     }
 
     return { currentList: bestList, remainingList };
   }
+
+  // // Hàm hỗ trợ để lấy các tổ hợp từ một mảng
+  // function getCombinations(array, size) {
+  //   const result = [];
+  //   const combine = (start, combo) => {
+  //     if (combo.length === size) {
+  //       result.push(combo);
+  //       return;
+  //     }
+  //     for (let i = start; i < array.length; i++) {
+  //       combine(i + 1, combo.concat(array[i]));
+  //     }
+  //   };
+  //   combine(0, []);
+  //   return result;
+  // }
+
+  // function neighbor(currentList, remainingList, maxWeight) {
+  //   let bestList = [...currentList];
+  //   let bestCost = Cost(currentList);
+
+  //   // Thử mọi khả năng loại bỏ từ 1 đến n món đồ
+  //   for (let i = 1; i <= currentList.length; i++) {
+  //     const combinations = getCombinations(currentList, i);
+  //     // loại bỏ 1 đến n đồ vật và thay thế 1 đồ vật từ remaining vào
+  //     combinations.forEach((combination) => {
+  //       let newList = currentList.filter((item) => !combination.includes(item)); // Loại bỏ món đồ
+  //       let newWeight = newList.reduce((sum, item) => sum + parseFloat(item.weight), 0);
+
+  //       // Thử thêm từng món đồ từ remainingList vào newList
+  //       remainingList.forEach((itemAdd) => {
+  //         if (newWeight + parseFloat(itemAdd.weight) <= maxWeight) {
+  //           let newListFromRemain = [...newList, itemAdd];
+  //           let newCostFromRemain = Cost(newListFromRemain);
+  //           if (newCostFromRemain > bestCost) {
+  //             bestList = newListFromRemain;
+  //             bestCost = newCostFromRemain;
+  //           }
+  //         }
+  //       });
+  //     });
+  //   }
+
+  //   return { currentList: bestList, remainingList };
+  // }
 
   // cải thiện = thuật toán
   function simulatedAnnealing(listInput, maxWeight) {
