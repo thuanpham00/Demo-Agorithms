@@ -321,6 +321,12 @@ window.addEventListener("load", function () {
       alert("Trọng lượng balo đang rỗng");
     }
 
+    if (inputDataBalo.value === "") {
+      alert("Trọng lượng balo đang rỗng");
+    }
+
+    console.log(inputDataBalo.value);
+
     if (baloWeight !== 0 && listObj.length !== 0) {
       resultTable(currentList_1, remainingList_1);
     }
