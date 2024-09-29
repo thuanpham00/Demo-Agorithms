@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sudoku</title>
+    <link rel="stylesheet" href="../reset.css" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="main">
+      <h1 class="text-shadow-multiple">Ứng dụng thuật toán tô màu đồ thị giải Sudoku</h1>
+      <div class="content-left">
+        <div class="menu-inner">
+          <div class="select-menu">
+            <div class="flex">
+              <label for="inputNodeBlank">Tạo ngẫu nhiên Sudoku với</label>
+              <div style="display: flex; align-items: center; gap: 4px">
+                <input type="text" id="inputNodeBlank" value="40" />
+                <div>ô trống</div>
+                <button class="randomButton">Random</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content-right">
+        <table id="sudoku"></table>
+        <div class="random-wrapper">
+          <button class="btn btn-clear">Xóa</button>
+          <button class="btn btn-run">Chạy thuật toán</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
