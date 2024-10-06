@@ -7,17 +7,47 @@
     <link rel="stylesheet" href="./reset.css" />
     <link rel="stylesheet" href="./AStar_Sudoku/style.css" />
   </head>
+  <style>
+    .main {
+      border: 1px solid #dadada;
+      position: absolute;
+      width: 400px;
+      top: 10%;
+      left: 50%;
+      transform: translate(-50%, -10%);
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background-color: #dadada;
+      border-radius: 5px;
+    }
+
+    h1 {
+      margin: 10px 0;
+      font-weight: 400;
+      text-transform: none; /* Tắt việc chuyển chữ thành in hoa */
+      color: #003049;
+    }
+  </style>
   <body>
-    <a style="display: block; color: red; margin-bottom: 10px" href="./AStar_Sudoku/index.html"
-      >Demo AStar - Sudoku</a
-    >
-    <a style="display: block; color: red; margin-bottom: 10px" href="./HillClimbing_Knapsack/Knapsack.html"
-      >Demo HillClimbing - KNAPSACK</a
-    >
-    <a style="display: block; color: red; margin-bottom: 10px" href="./Simulated_Knapsack/index.html"
-      >Demo Simulated Annealing - KNAPSACK</a
-    ><a style="display: block; color: red; margin-bottom: 10px" href="./GraphColoring_Sudoku/index.html"
-      >Demo Graph Coloring - Sudoku</a
-    >
+    <div class="main">
+      <h1>Demo Algorithm</h1>
+      <a style="display: block; color: red; margin-bottom: 10px" href="./AStar_Sudoku/index.html"
+        >Demo AStar - Sudoku</a
+      >
+      <a style="display: block; color: red; margin-bottom: 10px" href="./HillClimbing_Knapsack/Knapsack.html"
+        >Demo HillClimbing - KNAPSACK</a
+      >
+      <a style="display: block; color: red; margin-bottom: 10px" href="./Simulated_Knapsack/index.html"
+        >Demo Simulated Annealing - KNAPSACK</a
+      ><a style="display: block; color: red; margin-bottom: 10px" href="./GraphColoring_Sudoku/index.html"
+        >Demo Graph Coloring - Sudoku</a
+      >
+      <a style="display: block; color: red; margin-bottom: 10px" href="./Wanghao_solving/index.html"
+        >Demo Wang-hao - Solving</a
+      >
+    </div>
   </body>
 </html>

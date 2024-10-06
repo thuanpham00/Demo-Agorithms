@@ -4,20 +4,25 @@
 
 heap-js@^2.5.0:
   version "2.5.0"
-  resolved "https://registry.yarnpkg.com/heap-js/-/heap-js-2.5.0.tgz#487e268b1733b187ca04eccf52f8387be92b46cb"
+  resolved "https://registry.npmjs.org/heap-js/-/heap-js-2.5.0.tgz"
   integrity sha512-kUGoI3p7u6B41z/dp33G6OaL7J4DRqRYwVmeIlwLClx7yaaAy7hoDExnuejTKtuDwfcatGmddHDEOjf6EyIxtQ==
 
 js-heap@^0.3.1:
   version "0.3.1"
-  resolved "https://registry.yarnpkg.com/js-heap/-/js-heap-0.3.1.tgz#5b48965edb23bf6497f55e4982b5699ae9e02f4c"
+  resolved "https://registry.npmjs.org/js-heap/-/js-heap-0.3.1.tgz"
   integrity sha512-hj+APSYr/87JmlAZX2OLPJxigf/hhpc48lYPgwQLIedPITDNmimpGDWPBBMo2pwyiIqVsFwvtj9ISyM6+hDWvw==
 
 matplotlib@^1.0.0:
   version "1.0.0"
-  resolved "https://registry.yarnpkg.com/matplotlib/-/matplotlib-1.0.0.tgz#1b7a4fcdaf00a3df8b6199a41a0025cc031ba054"
+  resolved "https://registry.npmjs.org/matplotlib/-/matplotlib-1.0.0.tgz"
   integrity sha512-BiYNXIswoWqkcQ2dT+DbOAy8dR+Gi72rKilabj7x2SMAs8HDHDynvgbIPHHQn3SnR78IBh6rNxhlAbQPEjuwlw==
 
 numpy@^0.0.1:
   version "0.0.1"
-  resolved "https://registry.yarnpkg.com/numpy/-/numpy-0.0.1.tgz#c6bbd4c49b45bd537f768a09c9220a290de41598"
+  resolved "https://registry.npmjs.org/numpy/-/numpy-0.0.1.tgz"
   integrity sha512-HPoSFyRtH4dRUGjI6bzeVKgfOeNtIAWLvVWMqbaNGmWKE+npdnZ6L78TEJELgZBb+9XpL6r16vOz1jaQ7YVI7Q==
+
+sat@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.npmjs.org/sat/-/sat-0.9.0.tgz"
+  integrity sha512-mxdv5RZJO4tdMnUURGU3gAMcnDUEwcNJwE+lPO0/V+rBeDvFLH3wEZEOR0fH7cTN0zQaNxBEbHnyQL9DzupwQQ==

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chứng minh mệnh đề</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <h1>Chứng minh mệnh đề với Wang-hao</h1>
+    <div class="main">
+      <label for="hypotheses" style="font-size: 16px">Giả thuyết (cách nhau bằng dấu phẩy):</label>
+      <input
+        type="text"
+        id="hypotheses"
+        style="font-size: 16px; width: 300px"
+        placeholder="vd: p => q, q => r"
+      />
+      <br />
+      <label for="conclusion" style="font-size: 16px">Kết luận:</label>
+      <input type="text" id="conclusion" style="font-size: 16px; width: 300px" placeholder="vd: p => r" />
+      <br />
+      <button id="proveBtn" style="font-size: 16px">Chứng minh</button>
+
+      <pre id="result" style="font-size: 16px"></pre>
+    </div>
+
+    <script src="./main.js"></script>
+  </body>
+</html>

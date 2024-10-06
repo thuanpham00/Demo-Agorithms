@@ -1,0 +1,49 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+button {
+  display: block;
+  width: 120px;
+  padding: 4px;
+  background-color: #0077b6;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 999px;
+}
+
+button:hover {
+  background-color: #005f8d;
+}
+
+.main {
+  width: 100%;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+span {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.step {
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px dashed #0077b6; /* Đường viền đứt */
+  border-radius: 4px; /* Bo góc */
+  background-color: #f0f8ff; /* Màu nền nhẹ */
+}
