@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Robinson Algorithm Proof</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Chứng minh mệnh đề với Robinson</h2>
+      <form id="inputForm">
+        <label for="hypotheses">Nhập giả thuyết (phân cách bằng dấu ,):</label>
+        <input
+          type="text"
+          id="hypotheses"
+          placeholder="e.g., (A ∧ B) => C, (B ∧ C) => D, A, B"
+          required
+          value="(A ∧ B) => C, (B ∧ C) => D, A ∧ B"
+        />
+        <span style="display: block"></span>
+
+        <label for="conclusion">Nhập kết luận:</label>
+        <input type="text" id="conclusion" placeholder="e.g., D" required value="D" />
+
+        <button type="submit" id="submit">Chứng minh</button>
+      </form>
+
+      <div id="result">
+        <h3>Bước giải:</h3>
+        <div id="steps" class="steps"></div>
+      </div>
+    </div>
+    <script src="./main.js"></script>
+  </body>
+</html>
