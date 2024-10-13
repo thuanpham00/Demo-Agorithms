@@ -64,23 +64,23 @@ window.addEventListener("load", function () {
         return [...new Set(cleanedElements)];
       }
 
-      function distributeOrOverAnd(expr) {
-        let regex = /(\(.+?\))\s*∨\s*(\(.+?\))/g;
-        let match;
+      // function distributeOrOverAnd(expr) {
+      //   let regex = /(\(.+?\))\s*∨\s*(\(.+?\))/g;
+      //   let match;
 
-        while ((match = regex.exec(expr)) !== null) {
-          const left = match[1];
-          const right = match[2];
+      //   while ((match = regex.exec(expr)) !== null) {
+      //     const left = match[1];
+      //     const right = match[2];
 
-          const andMatches = left.match(/(\w+)/g);
-          if (andMatches) {
-            const distributed = andMatches.map((variable) => `(${variable} ∨ ${right})`).join(" ∧ ");
-            expr = expr.replace(match[0], distributed);
-          }
-        }
+      //     const andMatches = left.match(/(\w+)/g);
+      //     if (andMatches) {
+      //       const distributed = andMatches.map((variable) => `(${variable} ∨ ${right})`).join(" ∧ ");
+      //       expr = expr.replace(match[0], distributed);
+      //     }
+      //   }
 
-        return expr;
-      }
+      //   return expr;
+      // }
 
       function normalizeExpression(expr) {
         // Loại bỏ các phần tử trùng lặp
@@ -190,7 +190,6 @@ window.addEventListener("load", function () {
     let convertHypothesesArray = convertToCNF(Hypotheses);
     let convertNegateConclusion = convertToCNF2(Conclusion);
     convertHypothesesArray.push(convertNegateConclusion);
-    console.log(convertHypothesesArray);
 
     function resolveClauses(clause1, clause2) {
       const normalizedClause1 = clause1.replace(/∨/g, " v ");
@@ -219,8 +218,6 @@ window.addEventListener("load", function () {
       .join("")}</p>`;
 
     steps.innerHTML += `<p><strong>Tuyển từng cặp mệnh đề từ các mệnh đề:</p>`;
-    let newClauses = [...convertHypothesesArray];
-    let foundEmptyClause = false;
 
     function checkContradictoryClauses(clauses) {
       // Chuyển các mệnh đề thành mảng các phần tử
@@ -248,10 +245,12 @@ window.addEventListener("load", function () {
       return null; // Không tìm thấy cặp đối ngẫu
     }
 
+    let newClauses = [...convertHypothesesArray];
     let previousClauses = new Set(newClauses); // Tập hợp lưu trữ các mệnh đề đã xử lý
     let iterationCount = 0; // Đếm số vòng lặp
-    const maxIterations = 30; // Giới hạn số vòng lặp tối đa
+    const maxIterations = 50; // Giới hạn số vòng lặp tối đa
 
+    let foundEmptyClause = false;
     while (!foundEmptyClause) {
       const contradictoryPair = checkContradictoryClauses(newClauses);
       if (contradictoryPair) {
@@ -281,6 +280,7 @@ window.addEventListener("load", function () {
 
             if (!exists) {
               newGeneratedClauses.push(resolvedClause);
+
               // console.log(newGeneratedClauses);
               steps.innerHTML += `<p>Hợp giải giữa <strong>${newClauses[i]}</strong> và <strong>${newClauses[j]}</strong> tạo ra: <strong>${resolvedClause}</strong></p>`;
             }
@@ -293,10 +293,12 @@ window.addEventListener("load", function () {
         steps.innerHTML += `<p><strong>Kết luận:</strong> Không tìm thấy mệnh đề đối ngẫu. Không thể chứng minh mệnh đề.</p>`;
         break;
       }
+
       if (!foundEmptyClause) {
         // Cập nhật tập hợp các mệnh đề đã xử lý
         newGeneratedClauses.forEach((clause) => previousClauses.add(clause));
         newClauses = newClauses.concat(newGeneratedClauses);
+        console.log(newGeneratedClauses);
       }
 
       iterationCount++; // Tăng biến đếm số lần lặp
