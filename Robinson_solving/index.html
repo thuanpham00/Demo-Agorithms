@@ -8,28 +8,50 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <div class="container">
-      <h2>Chứng minh mệnh đề với Robinson</h2>
-      <form id="inputForm">
-        <label for="hypotheses">Nhập giả thuyết (phân cách bằng dấu ,):</label>
-        <input
-          type="text"
-          id="hypotheses"
-          placeholder="e.g., (A ∧ B) => C, (B ∧ C) => D, A, B"
-          required
-          value="(A ∧ B) => C, (B ∧ C) => D, A ∧ B"
-        />
-        <span style="display: block"></span>
+    <div style="display: flex; column-gap: 16px">
+      <div>
+        <h3>Phép toán logic</h3>
+        <ul>
+          <li>
+            <button class="btnMath" id="Disjunction">∧</button>
+          </li>
+          <li>
+            <button class="btnMath" id="Conjunction">∨</button>
+          </li>
+          <li>
+            <button class="btnMath" id="Implication">=></button>
+          </li>
+          <li>
+            <button class="btnMath" id="Negation">¬</button>
+          </li>
+          <li>
+            <button class="btnMath" id="Equivalence"><=></button>
+          </li>
+        </ul>
+      </div>
+      <div class="container">
+        <h2>Chứng minh mệnh đề với Robinson</h2>
+        <form id="inputForm">
+          <label for="hypotheses">Nhập giả thuyết (phân cách bằng dấu ,):</label>
+          <input
+            type="text"
+            id="hypotheses"
+            placeholder="e.g., (A ∧ B) => C, (B ∧ C) => D, A, B"
+            required
+            value="(A ∧ B) => C, (B ∧ C) => D, A ∧ B"
+          />
+          <span style="display: block"></span>
 
-        <label for="conclusion">Nhập kết luận:</label>
-        <input type="text" id="conclusion" placeholder="e.g., D" required value="D" />
+          <label for="conclusion">Nhập kết luận:</label>
+          <input type="text" id="conclusion" placeholder="e.g., D" required value="D" />
 
-        <button type="submit" id="submit">Chứng minh</button>
-      </form>
+          <button type="submit" id="submit">Chứng minh</button>
+        </form>
 
-      <div id="result">
-        <h3>Bước giải:</h3>
-        <div id="steps"></div>
+        <div id="result">
+          <h3>Bước giải:</h3>
+          <div id="steps"></div>
+        </div>
       </div>
     </div>
     <script src="./main.js"></script>

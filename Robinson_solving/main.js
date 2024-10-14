@@ -1,18 +1,63 @@
 window.addEventListener("load", function () {
+  let activeInput = null;
+  const inputHypotheses = document.getElementById("hypotheses");
+  const inputConclusion = document.getElementById("conclusion");
+  const btnDisjunction = document.getElementById("Disjunction");
+  const btnConjunction = document.getElementById("Conjunction");
+  const btnImplication = document.getElementById("Implication");
+  const btnNegation = document.getElementById("Negation");
+  const btnEquivalence = document.getElementById("Equivalence");
+
+  inputHypotheses.addEventListener("input", validateInput);
+  inputConclusion.addEventListener("input", validateInput);
+  function validateInput() {
+    this.value = this.value.replace(/\d/g, "");
+  }
+
+  inputHypotheses.addEventListener("focus", function () {
+    activeInput = inputHypotheses;
+  });
+
+  inputConclusion.addEventListener("focus", function () {
+    activeInput = inputConclusion;
+  });
+
+  btnDisjunction.addEventListener("click", function () {
+    if (activeInput) {
+      activeInput.value += "∧";
+    }
+  });
+
+  btnConjunction.addEventListener("click", function () {
+    if (activeInput) {
+      activeInput.value += "∨";
+    }
+  });
+
+  btnImplication.addEventListener("click", function () {
+    if (activeInput) {
+      activeInput.value += "=>";
+    }
+  });
+
+  btnNegation.addEventListener("click", function () {
+    if (activeInput) {
+      activeInput.value += "¬";
+    }
+  });
+
+  btnEquivalence.addEventListener("click", function () {
+    if (activeInput) {
+      activeInput.value += "<=>";
+    }
+  });
+
   document.getElementById("inputForm").addEventListener("submit", function (e) {
     e.preventDefault(); // chặn form mặc định
-    const inputHypotheses = document.getElementById("hypotheses");
-    const inputConclusion = document.getElementById("conclusion");
     const steps = document.getElementById("steps");
     steps.innerHTML = "";
 
-    inputHypotheses.addEventListener("input", validateInput);
-    inputConclusion.addEventListener("input", validateInput);
-
     // Validate đầu vào
-    function validateInput() {
-      this.value = this.value.replace(/\d/g, "");
-    }
 
     // Tách giả thuyết
     const Hypotheses = inputHypotheses.value.split(", ").map((item) => item.trim());
