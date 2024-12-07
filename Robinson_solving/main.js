@@ -11,7 +11,7 @@ window.addEventListener("load", function () {
   inputHypotheses.addEventListener("input", validateInput);
   inputConclusion.addEventListener("input", validateInput);
   function validateInput() {
-    this.value = this.value.replace(/\d/g, "");
+    this.value = this.value.replace(/\d/g, ""); // thay các kí tự số là ""
   }
 
   inputHypotheses.addEventListener("focus", function () {
@@ -57,8 +57,6 @@ window.addEventListener("load", function () {
     const steps = document.getElementById("steps");
     steps.innerHTML = "";
 
-    // Validate đầu vào
-
     // Tách giả thuyết
     const Hypotheses = inputHypotheses.value.split(", ").map((item) => item.trim());
     const Conclusion = inputConclusion.value.trim();
@@ -73,8 +71,10 @@ window.addEventListener("load", function () {
 
       function eliminateBiconditionals(expr) {
         return expr
-          .replace(/(\w+)\s*<=>\s*(\w+)/g, "($1 ∧ $2) ∨ (¬$1 ∧ ¬$2)")
-          .replace(/(\(.+?\))\s*<=>\s*(\w+)/g, "($1 ∧ $2) ∨ (¬$1 ∧ ¬$2)");
+          .replace(/(\w+)\s*<=>\s*(\w+)/g, "($1 ∧ $2) ∨ (¬$1 ∧ ¬$2)") // A <=> B === (A ∧ B) ∨ (¬A ∧ ¬B)
+          .replace(/(\(.+?\))\s*<=>\s*(\w+)/g, "($1 ∧ $2) ∨ (¬$1 ∧ ¬$2)") // (A ∧ B) <=> C === ((A ∧ B) ∧ C) ∨ (¬(A ∧ B) ∧ ¬C)
+          .replace(/(\w+)\s*<=>\s*(\(.+?\))/g, "($1 ∧ $2) ∨ (¬$1 ∧ ¬$2)") // A <=> (C ∨ D) === (A ∧ (C ∨ D)) ∨ (¬A ∧ ¬(C ∨ D))
+          .replace(/(\(.+?\))\s*<=>\s*(\(.+?\))/g, "($1 ∧ $2) ∨ (¬$1 ∧ ¬$2)"); // (A ∧ B) <=> (C ∨ D) === ((A ∧ B) ∧ (C ∨ D)) ∨ (¬(A ∧ B) ∧ ¬(C ∨ D))
       }
 
       function applyDeMorgan(expr) {
@@ -90,6 +90,7 @@ window.addEventListener("load", function () {
         // Thêm khoảng trắng xung quanh toán tử ∧ và ∨
         expr = expr.replace(/(\w+)\s*∧\s*(\w+)/g, "$1 ∧ $2");
         expr = expr.replace(/(\w+)\s*∨\s*(\w+)/g, "$1 ∨ $2");
+        expr = expr.replace(/(¬\w+)\s*∨\s*(¬\w+)/g, "$1 ∨ $2"); // Thêm khoảng trắng cho trường hợp ¬u ∨ ¬s
         return expr;
       }
 
@@ -108,24 +109,6 @@ window.addEventListener("load", function () {
         // Trả về các phần tử đã được loại bỏ trùng lặp
         return [...new Set(cleanedElements)];
       }
-
-      // function distributeOrOverAnd(expr) {
-      //   let regex = /(\(.+?\))\s*∨\s*(\(.+?\))/g;
-      //   let match;
-
-      //   while ((match = regex.exec(expr)) !== null) {
-      //     const left = match[1];
-      //     const right = match[2];
-
-      //     const andMatches = left.match(/(\w+)/g);
-      //     if (andMatches) {
-      //       const distributed = andMatches.map((variable) => `(${variable} ∨ ${right})`).join(" ∧ ");
-      //       expr = expr.replace(match[0], distributed);
-      //     }
-      //   }
-
-      //   return expr;
-      // }
 
       function normalizeExpression(expr) {
         // Loại bỏ các phần tử trùng lặp
@@ -148,11 +131,7 @@ window.addEventListener("load", function () {
         return conjunctions; // Trả về mảng chứa các mệnh đề CNF
       }
 
-      return hypotheses
-        .map((hypothesis) => {
-          return toCNF(hypothesis.replace(/\s/g, ""));
-        })
-        .flat(); // Sử dụng flat() để chuyển đổi mảng 2 chiều thành 1 chiều
+      return hypotheses.map((hypothesis) => toCNF(hypothesis.replace(/\s/g, ""))).flat(); // Sử dụng flat() để chuyển đổi mảng 2 chiều thành 1 chiều
     }
 
     function convertToCNF2(conclusion) {
@@ -172,21 +151,37 @@ window.addEventListener("load", function () {
       // Hàm loại bỏ các hàm suy diễn
       function eliminateImplications(expr) {
         return expr
+          .replace(/(\w+)\s*=>\s*(\w+)/g, "¬$1 ∨ $2") //  A => C === ¬A ∨ C
           .replace(/(\(.+?\))\s*=>\s*(\w+)/g, "¬$1 v $2")
           .replace(/(\w+)\s*=>\s*(\(.+?\))/g, "¬$1 v $2");
       }
 
-      // Hàm loại bỏ biconditionals
       function eliminateBiconditionals(expr) {
         return expr
-          .replace(/(\w+)\s*<=>\s*(\w+)/g, "($1 ∧ $2) v (¬$1 ∧ ¬$2)")
-          .replace(/(\(.+?\))\s*<=>\s*(\w+)/g, "($1 ∧ $2) v (¬$1 ∧ ¬$2)");
+          .replace(/(\w+)\s*<=>\s*(\w+)/g, "($1 ∧ $2) v (¬$1 ∧ ¬$2)") // A <=> B === (A ∧ B) ∨ (¬A ∧ ¬B)
+          .replace(/(\(.+?\))\s*<=>\s*(\w+)/g, "($1 ∧ $2) ∨ (¬$1 ∧ ¬$2)") // (A ∧ B) <=> C === ((A ∧ B) ∧ C) ∨ (¬(A ∧ B) ∧ ¬C)
+          .replace(/(\w+)\s*<=>\s*(\(.+?\))/g, "($1 ∧ $2) ∨ (¬$1 ∧ ¬$2)") // A <=> (C ∨ D) === (A ∧ (C ∨ D)) ∨ (¬A ∧ ¬(C ∨ D))
+          .replace(/(\(.+?\))\s*<=>\s*(\(.+?\))/g, "($1 ∧ $2) ∨ (¬$1 ∧ ¬$2)"); // (A ∧ B) <=> (C ∨ D) === ((A ∧ B) ∧ (C ∨ D)) ∨ (¬(A ∧ B) ∧ ¬(C ∨ D))
       }
 
       // Hàm áp dụng quy tắc De Morgan
       function applyDeMorgan(expr) {
+        // Phủ định của AND: ¬(A ∧ B) → ¬A v ¬B
         expr = expr.replace(/¬\((\w+)\s*∧\s*(\w+)\)/g, "¬$1 v ¬$2");
+
+        // Phủ định của OR: ¬(A v B) → ¬A ∧ ¬B
         expr = expr.replace(/¬\((\w+)\s*v\s*(\w+)\)/g, "¬$1 ∧ ¬$2");
+
+        // Phủ định kép: ¬(¬A) → A
+        expr = expr.replace(/¬\(¬(\w+)\)/g, "$1").replace(/¬¬(\w+)/g, "$1");
+
+        // Phủ định tổ hợp phức tạp: ¬(¬A v ¬B) → A ∧ B
+        expr = expr.replace(/¬\((¬\w+)\s*v\s*(¬\w+)\)/g, (match, p1, p2) => {
+          const var1 = p1.slice(1); // Loại bỏ ¬
+          const var2 = p2.slice(1); // Loại bỏ ¬
+          return `(${var1} ∧ ${var2})`;
+        });
+
         return expr;
       }
 
@@ -196,45 +191,56 @@ window.addEventListener("load", function () {
         return expr;
       }
 
-      // Hàm phân phối OR qua AND
-      function distributeOrOverAnd(expr) {
-        let regex = /(\(.+?\))\s*∨\s*(\(.+?\))/g;
-        let match;
+      function simplifyDoubleNegation(expr) {
+        // Loại bỏ tất cả các phủ định kép ¬(¬A) => A hoặc ¬¬A => A
+        return expr.replace(/¬\(¬(\w+)\)/g, "$1").replace(/¬¬(\w+)/g, "$1");
+      }
 
-        while ((match = regex.exec(expr)) !== null) {
-          const left = match[1];
-          const right = match[2];
+      function distributeAndOverOr(expr) {
+        // Phân phối AND qua OR: (A ∧ B) v D → (A v D) ∧ (B v D)
+        expr = expr.replace(/\((\w+)\s*∧\s*(\w+)\)\s*v\s*(\w+)/g, "($1 v $3) ∧ ($2 v $3)");
 
-          const andMatches = left.match(/(\w+)/g);
-          if (andMatches) {
-            const distributed = andMatches.map((variable) => `(${variable} ∨ ${right})`).join(" ∧ ");
-            expr = expr.replace(match[0], distributed);
-          }
-        }
+        // Tách thành các mệnh đề riêng biệt: (A v D) ∧ (B v D) => (A v D), (B v D)
+        expr = expr.replace(/\((\w+)\s*v\s*(\w+)\)\s*∧\s*\((\w+)\s*v\s*(\w+)\)/g, "$1 v $2, $3 v $4");
+
+        // Phân phối OR qua AND: A v (B ∧ C) → (A v B) ∧ (A v C)
+        expr = expr.replace(/(\w+)\s*v\s*\((\w+)\s*∧\s*(\w+)\)/g, "($1 v $2) ∧ ($1 v $3)");
+
+        // Xử lý tổ hợp phức tạp hơn: (A ∧ B) v (C ∧ D) → ((A v C) ∧ (A v D)) ∧ ((B v C) ∧ (B v D))
+        expr = expr.replace(
+          /\((\w+)\s*∧\s*(\w+)\)\s*v\s*\((\w+)\s*∧\s*(\w+)\)/g,
+          "(($1 v $3) ∧ ($1 v $4)) ∧ (($2 v $3) ∧ ($2 v $4))"
+        );
 
         return expr;
       }
 
       // Hàm chính để chuyển đổi sang CNF
       function toCNF(expr) {
-        expr = negate(expr); // Bước đầu tiên: phủ định
+        expr = expr
+          .split(",")
+          .map((e) => e.trim())
+          .map(negate)
+          .join(", ");
         expr = eliminateImplications(expr);
         expr = eliminateBiconditionals(expr);
         expr = applyDeMorgan(expr);
+        expr = distributeAndOverOr(expr); // Thêm bước phân phối
+        expr = simplifyDoubleNegation(expr); // Loại bỏ phủ định kép
         expr = formatAndOperator(expr);
-        expr = distributeOrOverAnd(expr);
+
         return expr;
       }
 
-      return toCNF(conclusion); // Trả về kết quả sau khi chuyển đổi
+      return toCNF(conclusion).split(", ");
     }
 
-    steps.innerHTML += `<p><strong>Giả thuyết:</strong> ${Hypotheses.join(", ")}</p>`;
-    steps.innerHTML += `<p><strong>Kết luận:</strong> ${Conclusion}</p>`;
-
     let convertHypothesesArray = convertToCNF(Hypotheses);
+    steps.innerHTML += `<p><strong>Dạng chuẩn:</strong> ${convertHypothesesArray.join(
+      ", "
+    )}  => ${Conclusion}</p>`;
     let convertNegateConclusion = convertToCNF2(Conclusion);
-    convertHypothesesArray.push(convertNegateConclusion);
+    [...convertNegateConclusion].forEach((item) => convertHypothesesArray.push(item));
 
     function resolveClauses(clause1, clause2) {
       const normalizedClause1 = clause1.replace(/∨/g, " v ");
@@ -296,11 +302,13 @@ window.addEventListener("load", function () {
     const maxIterations = 50; // Giới hạn số vòng lặp tối đa
 
     let foundEmptyClause = false;
-    while (!foundEmptyClause) {
+    let foundContradictoryPair = false;
+    while (!foundEmptyClause && !foundContradictoryPair) {
       const contradictoryPair = checkContradictoryClauses(newClauses);
       if (contradictoryPair) {
         steps.innerHTML += `<p><strong>Cặp mệnh đề đối ngẫu được tìm thấy: ${contradictoryPair[0]} và ${contradictoryPair[1]}</strong></p>`;
         steps.innerHTML += `<p><strong>Kết luận:</strong> Mệnh đề đã được chứng minh thành công.</p>`;
+        foundContradictoryPair = true; // Đặt cờ khi tìm thấy cặp đối ngẫu
         return; // Dừng lại
       }
 
@@ -315,7 +323,7 @@ window.addEventListener("load", function () {
           if (resolvedClause === "∅") {
             foundEmptyClause = true; // Đặt cờ tìm thấy mệnh đề rỗng
             emptyClauseFound = true;
-            break;
+            break; // Thoát ra khỏi cả hai vòng lặp for;
           } else if (resolvedClause && !newClauses.includes(resolvedClause)) {
             const sortResolvedClause = resolvedClause.split(" v ").sort().join(" v ");
             const exists = newGeneratedClauses.some((clause) => {
@@ -325,25 +333,26 @@ window.addEventListener("load", function () {
 
             if (!exists) {
               newGeneratedClauses.push(resolvedClause);
-
-              // console.log(newGeneratedClauses);
               steps.innerHTML += `<p>Hợp giải giữa <strong>${newClauses[i]}</strong> và <strong>${newClauses[j]}</strong> tạo ra: <strong>${resolvedClause}</strong></p>`;
+              newGeneratedClauses.forEach((clause) => previousClauses.add(clause));
+              newClauses = newClauses.concat(newGeneratedClauses);
+
+              const check = checkContradictoryClauses(newClauses);
+              if (Boolean(check)) {
+                steps.innerHTML += `<p><strong>Cặp mệnh đề đối ngẫu được tìm thấy: ${check[0]} và ${check[1]}</strong></p>`;
+                steps.innerHTML += `<p><strong>Kết luận:</strong> Mệnh đề đã được chứng minh thành công.</p>`;
+                foundContradictoryPair = true; // Đặt cờ khi tìm thấy cặp đối ngẫu
+                return; // Dừng lại
+              }
             }
           }
         }
         if (emptyClauseFound) break; // Dừng vòng lặp i nếu đã tìm thấy mệnh đề rỗng
       }
 
-      if (!foundEmptyClause && newGeneratedClauses.length === 0) {
+      if (newGeneratedClauses.length === 0) {
         steps.innerHTML += `<p><strong>Kết luận:</strong> Không tìm thấy mệnh đề đối ngẫu. Không thể chứng minh mệnh đề.</p>`;
         break;
-      }
-
-      if (!foundEmptyClause) {
-        // Cập nhật tập hợp các mệnh đề đã xử lý
-        newGeneratedClauses.forEach((clause) => previousClauses.add(clause));
-        newClauses = newClauses.concat(newGeneratedClauses);
-        console.log(newGeneratedClauses);
       }
 
       iterationCount++; // Tăng biến đếm số lần lặp
@@ -369,3 +378,6 @@ window.addEventListener("load", function () {
 
 // M ∨ N, (M ∧ P) => Q, P
 // Q
+
+// ¬p ∨ q, ¬q ∨ r, ¬r ∨ s, ¬u ∨ ¬s
+// ¬p, ¬u
